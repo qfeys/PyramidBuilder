@@ -171,9 +171,39 @@ namespace Assets.Scripts
     class Construction : Job
     {
         internal float stock;
+        float constructionSpeed = 0.05f;   // you need 20 people to place 1 stone
+        Queue<Task> tasks = new Queue<Task>();
+        float progress = 0;
         internal override void Tick()
         {
-            throw new NotImplementedException();
+            float totalWork = People.PeopleAt(People.Community.construction) * constructionSpeed;
+            while (totalWork > 0)
+            {
+                if (tasks.Peek().work < totalWork)
+                {
+                    totalWork -= tasks.Peek().work;
+                    tasks.Dequeue().onCompletion();
+                }
+                else
+                {
+                    tasks.Peek().work -= totalWork;
+                    break;
+                }
+            }
+            float workOnPyramid = Math.Min(totalWork, stock);
+            stock -= workOnPyramid;
+            totalWork -= workOnPyramid;
+            progress += workOnPyramid;
+            if (totalWork > 0) God.TheOne.Console("" + totalWork.ToString("d2") + " tasks worth of work is being wasted by your construction crew.");
+        }
+
+        public void AddTask(float work, Action onCompletion) { tasks.Enqueue(new Task(work, onCompletion)); }
+
+        class Task
+        {
+            public float work;
+            public Action onCompletion { get; private set; }
+            public Task(float work, Action onCompletion) { this.work = work; this.onCompletion = onCompletion; }
         }
     }
 
