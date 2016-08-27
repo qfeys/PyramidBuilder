@@ -202,7 +202,7 @@ namespace Assets.Scripts
             stock -= workOnPyramid;
             totalWork -= workOnPyramid;
             progress += workOnPyramid;
-            if (totalWork > 0) God.TheOne.Console("" + totalWork.ToString("n2") + " tasks worth of work is being wasted by your construction crew.");
+            //if (totalWork > 0) God.TheOne.Console("" + totalWork.ToString("n2") + " tasks worth of work is being wasted by your construction crew.");
         }
 
         public void AddTask(float work, Action onCompletion) { tasks.Enqueue(new Task(work, onCompletion)); }
