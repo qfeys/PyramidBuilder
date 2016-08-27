@@ -39,5 +39,9 @@ namespace Assets.Scripts
             God.TheOne.isPaused = !God.TheOne.isPaused;
             transform.Find("PanelSpeed").GetChild(2).GetChild(0).GetComponent<Text>().fontStyle = God.TheOne.isPaused ? FontStyle.Bold : FontStyle.Normal;
         }
+        public void ToggleRealmOverview()
+        {
+            RealmOverview.TheOne.gameObject.SetActive(!RealmOverview.TheOne.gameObject.activeSelf);
+        }
     }
 }
