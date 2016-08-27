@@ -3,25 +3,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class People {
+namespace Assets.Scripts
+{
 
-    int totalPopulation;
-    public enum Communities { farm, quarry, transportRoad, transportRiver, construction, military};
-    public Dictionary<Communities, float> populationDistribution;
-    public Dictionary<Communities, float> foodAllowance;
-
-    public People()
-    {
-        totalPopulation = 1000;
-        populationDistribution = Enum.GetValues(typeof(Communities)).Cast<Communities>().ToDictionary(t => t, t => 0.0f);
-        foodAllowance = Enum.GetValues(typeof(Communities)).Cast<Communities>().ToDictionary(t => t, t => 1.0f);
-    }
-
-    /// <summary>
-    /// proceed one timestep
-    /// </summary>
-    public void Tick()
+    public static class People
     {
 
+        static int totalPopulation;
+        public enum Community { farm, quarry, transportRoad, transportRiver, construction, military };
+        static public Dictionary<Community, float> populationDistribution { get; private set; }
+        static public Dictionary<Community, float> foodAllowance { get; private set; }
+        static public Dictionary<Community, float> unrest { get; private set; }
+
+        static public void Init()
+        {
+            totalPopulation = 1000;
+            populationDistribution = Enum.GetValues(typeof(Community)).Cast<Community>().ToDictionary(t => t, t => 0.0f);
+            foodAllowance = Enum.GetValues(typeof(Community)).Cast<Community>().ToDictionary(t => t, t => 1.0f);
+            unrest = Enum.GetValues(typeof(Community)).Cast<Community>().ToDictionary(t => t, t => 0.0f);
+        }
+
+        /// <summary>
+        /// proceed one timestep
+        /// </summary>
+        static public void Tick()
+        {
+
+        }
+
+        static public int PeopleAt(Community comunity)
+        {
+            return (int)(totalPopulation * populationDistribution[comunity]);
+        }
     }
 }
