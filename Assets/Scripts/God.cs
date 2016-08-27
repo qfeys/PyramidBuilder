@@ -21,6 +21,12 @@ namespace Assets.Scripts
         internal readonly Construction construction = new Construction();
         internal readonly Military military = new Military();
 
+        GOclasses.QuarryGO quarryGO;
+        GOclasses.FarmGO farmGO;
+        GOclasses.ConstructionGO constructionGO;
+        GOclasses.RoadGO roadGO;
+        GOclasses.RiverGO riverGO;
+
         static internal System.Random random = new System.Random();
 
         public void Awake() { if (TheOne == null) TheOne = this; }
@@ -53,6 +59,32 @@ namespace Assets.Scripts
                     People.Tick();
                     RealmOverview.TheOne.UpdateUnrest();
                 }
+            }
+        }
+
+        public void Report(object obj)
+        {
+            Debug.Log(obj.GetType().ToString());
+            switch (obj.GetType().ToString())
+            {
+            case "Assets.Scripts.GOclasses.QuarryGO":
+                quarryGO = (GOclasses.QuarryGO)obj;
+                break;
+            case "Assets.Scripts.GOclasses.FarmGO":
+                farmGO = (GOclasses.FarmGO)obj;
+                break;
+            case "Assets.Scripts.GOclasses.ConstructionGO":
+                constructionGO = (GOclasses.ConstructionGO)obj;
+                break;
+            case "Assets.Scripts.GOclasses.RoadGO":
+                roadGO = (GOclasses.RoadGO)obj;
+                break;
+            case "Assets.Scripts.GOclasses.RiverGO":
+                riverGO = (GOclasses.RiverGO)obj;
+                break;
+            default:
+                Debug.Log("Bad report by: " + obj.GetType().ToString());
+                break;
             }
         }
 
