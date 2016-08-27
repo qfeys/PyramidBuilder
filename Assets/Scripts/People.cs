@@ -83,12 +83,10 @@ namespace Assets.Scripts
         static void SanitisePopDist()
         {
             float totalAllocPop = populationDistribution.Sum(kvp => kvp.Value);
-            Debug.Log("" + totalAllocPop);
             foreach (var com in communityList)
             {
                 populationDistribution[com] /= totalAllocPop;
             }
-            Debug.Log("" + populationDistribution.Sum(kvp => kvp.Value));
         }
 
         static public void TrySetPopulation(Community com, float value)
