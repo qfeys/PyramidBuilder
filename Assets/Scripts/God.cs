@@ -92,9 +92,11 @@ namespace Assets.Scripts
             Debug.Log(s);
         }
 
-        internal static void UpdatePeopleDrawn()
+        internal void UpdatePeopleDrawn()
         {
-            throw new NotImplementedException();
+            quarryGO.SetNumberOfPersons(People.PeopleAt(People.Community.quarry));
+            farmGO.SetNumberOfPersons(People.PeopleAt(People.Community.farm));
+            constructionGO.SetNumberOfPersons(People.PeopleAt(People.Community.construction));
         }
     }
 }

@@ -17,7 +17,9 @@ namespace Assets.Scripts
         public  float stock { get; private set; }
         float efficiency = 1;
         float production { get { return People.PeopleAt(People.Community.farm) * efficiency * People.Productivity(People.Community.farm); } }
-        float storageCapacity = 50000;
+        public float storageCapacity { get; private set; }
+
+        public Farm() { storageCapacity = 50000; }
         internal override void Tick()
         {
             stock += production;

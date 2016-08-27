@@ -32,7 +32,7 @@ namespace Assets.Scripts
         {
             // Food
             Farm f = God.TheOne.farm;
-            float requestedFood = communityList.Sum(c => populationDistribution[c] * foodAllowance[c]);
+            float requestedFood = communityList.Sum(c => populationDistribution[c] * foodAllowance[c])*totalPopulation * DateTime.DaysInMonth(God.TheOne.time.AddDays(-1).Year, God.TheOne.time.AddDays(-1).Month);
             if (f.stock < requestedFood) // To much food allocated, reduce allocations
             {
                 float reductionRatio = f.stock / requestedFood;
@@ -107,7 +107,7 @@ namespace Assets.Scripts
             }
             populationDistribution[com] = value;
             SanitisePopDist();
-            God.UpdatePeopleDrawn();
+            God.TheOne.UpdatePeopleDrawn();
             
         }
 
