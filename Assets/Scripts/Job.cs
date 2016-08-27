@@ -85,16 +85,92 @@ namespace Assets.Scripts
     class River : Job
     {
         int dockStock;
+        List<Boat> boats = new List<Boat>() { new Boat(), new Boat() };
+        public enum Priority { smallest, fastest};
+        public Priority priority;
         internal override void Tick()
         {
-            throw new NotImplementedException();
+            while (dockStock > 0)
+            {
+                Boat next = boats.FindAll(b => b.isInDock && b.IsActive).
+                    OrderBy(b => { switch (priority) { case Priority.smallest: return b.capacity; case Priority.fastest: return b.GetTimeRequired(); } throw new Exception("invalid priority"); }).
+                    First();
+                if (dockStock > next.capacity)
+                {
+                    next.Load(next.capacity);
+                    dockStock -= next.capacity;
+                }
+                else break;
+            }
         }
 
         internal void newStonesArrive(int stones) { dockStock += stones; }
+
+        class Boat
+        {
+            public int crew { get; private set; }
+            public int stones { get; private set; }
+            public int timeTillArrival { get; private set; }
+            public bool isInDock { get; private set; }
+            readonly public int capacity;
+            readonly public int minCrew;
+            readonly public int maxCrew;
+            readonly public int minTravelTime; // How many ticks this boat needs to take the trip on minimum crew
+            readonly public int maxTravelTime; // How many ticks this boat needs to take the trip on maximum crew
+            public bool IsActive { get { return crew >= minCrew; } }
+
+            public Boat(int capacity = 5, int minCrew = 10, int maxCrew = 10, int minSpeed = 5, int maxSpeed = 5)
+            {
+                this.capacity = capacity; this.minCrew = minCrew; this.maxCrew = maxCrew; this.minTravelTime = minSpeed; this.maxTravelTime = maxSpeed;
+                crew = 0; stones = 0; timeTillArrival = 0;
+            }
+
+            public void Tick()
+            {
+                if (IsActive)
+                {
+                    if (timeTillArrival > 0)
+                    {
+                        timeTillArrival--;
+                        if(timeTillArrival == 0)    // Boat just arrived
+                        {
+                            if(stones> 0)
+                            {
+                                God.TheOne.construction.stock += stones;
+                                timeTillArrival = GetTimeRequired();
+                            }
+                            else { isInDock = true; }
+                        }
+                    }
+                }
+            }
+
+            public int GetTimeRequired()
+            {
+                int maxCrewDiff = maxCrew - minCrew;
+                int maxTimeDiff = maxTravelTime - minTravelTime;
+                int crewDiff = crew - minCrew;
+                return minTravelTime + (int)((float)maxTimeDiff / maxCrewDiff * crewDiff);
+            }
+
+            public void Man(int extraCrew)
+            {
+                crew += extraCrew;
+                if (crew > maxCrew) throw new ArgumentException("to many crew for this boat");
+            }
+
+            public void Load(int stones)
+            {
+                if (this.stones != 0) throw new Exception("Trying to load an already filled boat");
+                this.stones = stones;
+                timeTillArrival = GetTimeRequired() + 1;        // One tick for loading
+            }
+        }
     }
 
     class Construction : Job
     {
+        internal float stock;
         internal override void Tick()
         {
             throw new NotImplementedException();
