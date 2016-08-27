@@ -77,5 +77,16 @@ namespace Assets.Scripts
         {
             return 1 - unrest[comunity];
         }
+
+        static void SanitisePopDist()
+        {
+            float totalAllocPop = populationDistribution.Sum(kvp => kvp.Value);
+            Debug.Log("" + totalAllocPop);
+            foreach (var com in Enum.GetValues(typeof(Community)).Cast<Community>())
+            {
+                populationDistribution[com] /= totalAllocPop;
+            }
+            Debug.Log("" + populationDistribution.Sum(kvp => kvp.Value));
+        }
     }
 }
