@@ -31,6 +31,7 @@ namespace Assets.Scripts.GOclasses
         public void AddPersons(int p)
         {
             passivePersons += p;
+            transform.GetChild(0).GetComponent<ParticleSystem>().Emit(passivePersons);
         }
 
         public void launchTeam(int id, int persons)
@@ -59,7 +60,16 @@ namespace Assets.Scripts.GOclasses
             public readonly int persons;
             readonly DynamicMapObject boss;
             public float progress { get; private set; }
-            public Team(int id, GameObject core, int persons, DynamicMapObject boss) { this.id = id; this.core = core;  this.persons = persons;this.boss = boss; progress = 0; }
+            public Team(int id, GameObject core, int persons, DynamicMapObject boss) { this.id = id; this.core = core;  this.persons = persons; this.boss = boss; progress = 0;
+                core.transform.position = boss.route[0].position;
+                core.transform.GetComponent<ParticleSystem>().Emit(persons);
+            }
+
+            public void SetPRogress(float newProgress)
+            {
+                progress = newProgress;
+                core.transform.position = boss.FindPosition(progress);
+            }
             
         }
 
