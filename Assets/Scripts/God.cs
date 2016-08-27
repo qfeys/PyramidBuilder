@@ -64,7 +64,6 @@ namespace Assets.Scripts
 
         public void Report(object obj)
         {
-            Debug.Log(obj.GetType().ToString());
             switch (obj.GetType().ToString())
             {
             case "Assets.Scripts.GOclasses.QuarryGO":

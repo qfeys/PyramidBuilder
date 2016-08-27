@@ -91,11 +91,16 @@ namespace Assets.Scripts
 
         static public void TrySetPopulation(Community com, float value)
         {
-            float others = populationDistribution.Where(kvp => kvp.Key != com).Sum(kvp => kvp.Value);
-            if (others == 0) others = float.Epsilon;
-            float reductionRatio = (1 - value) / others;
-            communityList.ForEach(c => populationDistribution[c] *= reductionRatio);
+            var comList = communityList;
+            float personDiff = (int)((populationDistribution[com] - value) );
+            Debug.LogError("old: " + populationDistribution[com] + " , new: " + value + " , total Population" + totalPopulation);
+            Debug.Log("personDiff: " + personDiff);
+            float equalShare = personDiff / (comList.Count-1);
+            Debug.Log("Equal share: " + equalShare);
+            communityList.ForEach(c => populationDistribution[c] += equalShare);
             populationDistribution[com] = value;
+            SanitisePopDist();
+            
         }
 
         static public void TrySetFood(Community com, float value)
