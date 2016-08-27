@@ -7,7 +7,7 @@ namespace Assets.Scripts
 {
     abstract class Job
     {
-
+        static protected Random random = new Random();
         protected float techProgress;
 
         abstract internal void Tick();
@@ -17,7 +17,7 @@ namespace Assets.Scripts
     {
         protected float stock;
         float efficiency = 1;
-        float production { get { return People.PeopleAt(People.Community.farm) * efficiency * (1 - People.unrest[People.Community.farm]); } }
+        float production { get { return People.PeopleAt(People.Community.farm) * efficiency * People.Productivity(People.Community.farm); } }
         internal override void Tick()
         {
             stock += production;
@@ -33,7 +33,7 @@ namespace Assets.Scripts
     {
         protected float stock;
         float efficiency = 0.05f;   // you need 20 people to make 1 stone
-        float production { get { return People.PeopleAt(People.Community.quarry) * efficiency * (1 - People.unrest[People.Community.quarry]); } }
+        float production { get { return People.PeopleAt(People.Community.quarry) * efficiency * People.Productivity(People.Community.quarry); } }
         internal override void Tick()
         {
             stock += production;
@@ -63,7 +63,8 @@ namespace Assets.Scripts
             }
             for (int i = teamsOnTheWay.Count - 1; i >= 0; i--)
             {
-                teamsOnTheWay[i].Time++;
+                if(random.NextDouble()<People.Productivity(People.Community.transportRoad))
+                    teamsOnTheWay[i].Time++;        // If the productivity is to low, somtimes they will not move.
                 if(teamsOnTheWay[i].Time > transportTime)
                 {
                     God.TheOne.river.newStonesArrive(teamsOnTheWay[i].stones);
@@ -102,6 +103,7 @@ namespace Assets.Scripts
                 }
                 else break;
             }
+            boats.ForEach(b => b.Tick());
         }
 
         internal void newStonesArrive(int stones) { dockStock += stones; }
@@ -131,7 +133,8 @@ namespace Assets.Scripts
                 {
                     if (timeTillArrival > 0)
                     {
-                        timeTillArrival--;
+                        if (random.NextDouble() < People.Productivity(People.Community.transportRiver))
+                            timeTillArrival--;      // Sometimes they will not move if productivity is to low
                         if(timeTillArrival == 0)    // Boat just arrived
                         {
                             if(stones> 0)
@@ -209,9 +212,13 @@ namespace Assets.Scripts
 
     class Military : Job
     {
+        float suppressionEfficiancy = 1.0f;
+        public float totalSuppression { get { return People.PeopleAt(People.Community.military) * suppressionEfficiancy * People.Productivity(People.Community.military); } }
         internal override void Tick()
         {
-            throw new NotImplementedException();
+            // Do nthing, I guess
         }
+
+        
     }
 }

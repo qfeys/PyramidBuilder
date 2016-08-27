@@ -35,5 +35,10 @@ namespace Assets.Scripts
         {
             return (int)(totalPopulation * populationDistribution[comunity]);
         }
+
+        static public float Productivity(Community comunity)
+        {
+            return 1 - unrest[comunity];
+        }
     }
 }
