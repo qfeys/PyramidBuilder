@@ -9,7 +9,7 @@ namespace Assets.Scripts
     public static class People
     {
 
-        static int totalPopulation;
+        public static int totalPopulation { get; private set; }
         public enum Community { farm, quarry, transportRoad, transportRiver, construction, military };
         static public Dictionary<Community, float> populationDistribution { get; private set; }
         static public Dictionary<Community, float> foodAllowance { get; private set; }
@@ -18,9 +18,10 @@ namespace Assets.Scripts
         static public void Init()
         {
             totalPopulation = 1000;
-            populationDistribution = Enum.GetValues(typeof(Community)).Cast<Community>().ToDictionary(t => t, t => 0.0f);
+            populationDistribution = Enum.GetValues(typeof(Community)).Cast<Community>().ToDictionary(t => t, t => 0.2f);
             foodAllowance = Enum.GetValues(typeof(Community)).Cast<Community>().ToDictionary(t => t, t => 1.0f);
             unrest = Enum.GetValues(typeof(Community)).Cast<Community>().ToDictionary(t => t, t => 0.0f);
+            SanitisePopDist();
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Assets.Scripts
             f.TakeFood(requestedFood);
             // growth
             // at normal food it is 2% per year, at 0.5 food 0%, at 0 food -100%, max growth is at 1.5 food with 3% growth
-            float statisticalGrowth = 0;
+            double statisticalGrowth = 0;
             foreach (var com in Enum.GetValues(typeof(Community)).Cast<Community>())
             {
                 float growth;   // in percent
@@ -50,9 +51,10 @@ namespace Assets.Scripts
                 else if (foodAllowance[com] > 0.5f) growth = (foodAllowance[com] - 0.5f) * 4;
                 else growth = (foodAllowance[com] - 0.5f) * -100;
 
-                statisticalGrowth += Mathf.Pow(1 + growth / 100, 1 / 365f) * PeopleAt(com);
+                statisticalGrowth += Math.Pow(1 + growth / 100, 1 / 12f) * PeopleAt(com);
             }
-            totalPopulation += (int)statisticalGrowth + God.random.NextDouble() > statisticalGrowth - Mathf.Floor(statisticalGrowth) ? 1 : 0;
+            Debug.Log("" + statisticalGrowth);
+            totalPopulation += (int)statisticalGrowth + God.random.NextDouble() < statisticalGrowth - Math.Floor(statisticalGrowth) ? 1 : 0;
             // unrest
             float suppression = God.TheOne.military.totalSuppression / totalPopulation;
             float inequality = foodAllowance.Values.Max() - foodAllowance.Values.Min();

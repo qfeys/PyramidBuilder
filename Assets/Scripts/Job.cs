@@ -17,12 +17,13 @@ namespace Assets.Scripts
         public  float stock { get; private set; }
         float efficiency = 1;
         float production { get { return People.PeopleAt(People.Community.farm) * efficiency * People.Productivity(People.Community.farm); } }
+        float storageCapacity = 50000;
         internal override void Tick()
         {
             stock += production;
-            if (stock > production * 2)
+            if (stock > storageCapacity)
             {
-                stock = production * 2;
+                stock = storageCapacity;
                 God.TheOne.Console("Food stock overflow. Stop wasting food!");
             }
         }
@@ -60,7 +61,7 @@ namespace Assets.Scripts
             int availablePeople = People.PeopleAt(People.Community.transportRoad) - teamsOnTheWay.Sum(t => t.people);
             if (availablePeople < 0) God.TheOne.Console("Road has negative people!");
             int availableStones = God.TheOne.quarry.HasStones();
-            int stonesToBeMoved = Math.Max(availablePeople / teamsize, availableStones);
+            int stonesToBeMoved = Math.Min(availablePeople / teamsize, availableStones);
             if (stonesToBeMoved > 0)
             {
                 teamsOnTheWay.Add(new Team(stonesToBeMoved * teamsize, stonesToBeMoved));
@@ -99,8 +100,8 @@ namespace Assets.Scripts
             {
                 Boat next = boats.FindAll(b => b.isInDock && b.IsActive).
                     OrderBy(b => { switch (priority) { case Priority.smallest: return b.capacity; case Priority.fastest: return b.GetTimeRequired(); } throw new Exception("invalid priority"); }).
-                    First();
-                if (dockStock > next.capacity)
+                    FirstOrDefault();
+                if (next != null && dockStock > next.capacity)
                 {
                     next.Load(next.capacity);
                     dockStock -= next.capacity;
@@ -184,7 +185,7 @@ namespace Assets.Scripts
         internal override void Tick()
         {
             float totalWork = People.PeopleAt(People.Community.construction) * constructionSpeed;
-            while (totalWork > 0)
+            while (totalWork > 0 && tasks.Count != 0)
             {
                 if (tasks.Peek().work < totalWork)
                 {
@@ -201,7 +202,7 @@ namespace Assets.Scripts
             stock -= workOnPyramid;
             totalWork -= workOnPyramid;
             progress += workOnPyramid;
-            if (totalWork > 0) God.TheOne.Console("" + totalWork.ToString("d2") + " tasks worth of work is being wasted by your construction crew.");
+            if (totalWork > 0) God.TheOne.Console("" + totalWork.ToString("n2") + " tasks worth of work is being wasted by your construction crew.");
         }
 
         public void AddTask(float work, Action onCompletion) { tasks.Enqueue(new Task(work, onCompletion)); }

@@ -8,7 +8,7 @@ namespace Assets.Scripts
     public class God : MonoBehaviour {
         public static God TheOne;
 
-        public int time { get; private set; }
+        public DateTime time { get; private set; }
         float clock;
         public int timeSetting;
         Dictionary<int, float> deltaTime = new Dictionary<int, float>() { { 1, 1.0f }, { 2, 0.5f }, { 3, 0.25f }, { 4, 0.125f }, { 5, 0.0625f } };
@@ -27,7 +27,7 @@ namespace Assets.Scripts
         void Start()
         {
             if (TheOne == null) TheOne = this;
-            time = 0;
+            time = new DateTime(1, 1, 1);
             People.Init();
             timeSetting = 1;
             isPaused = true;
@@ -37,17 +37,20 @@ namespace Assets.Scripts
         void Update() {
             if (isPaused == false)
                 clock += Time.deltaTime;
-            if(clock >= deltaTime[timeSetting])
+            if(clock >= deltaTime[timeSetting]) // Daily tick
             {
                 clock = 0;
-                time++;
+                time = time.AddDays(1);
                 farm.Tick();
                 quarry.Tick();
                 road.Tick();
                 river.Tick();
                 construction.Tick();
                 military.Tick();
-                People.Tick();
+                if (time.Day == 1)              // Monthly tick
+                {
+                    People.Tick();
+                }
             }
         }
 

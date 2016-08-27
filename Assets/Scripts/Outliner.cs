@@ -18,7 +18,8 @@ namespace Assets.Scripts
 
         public void Update()
         {
-            transform.Find("PanelTime").GetChild(1).GetComponent<Text>().text = new DateTime(1, 1, 1).AddDays(God.TheOne.time).ToString("MM-dd");
+            transform.Find("PanelTime").GetChild(1).GetComponent<Text>().text = God.TheOne.time.ToString("MM-dd");
+            transform.Find("PanelPopulation").GetChild(1).GetComponent<Text>().text = People.totalPopulation.ToString("# ###");
         }
 
         public void TimeUp()
