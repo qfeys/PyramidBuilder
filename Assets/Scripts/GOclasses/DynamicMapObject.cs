@@ -34,6 +34,13 @@ namespace Assets.Scripts.GOclasses
             transform.GetChild(0).GetComponent<ParticleSystem>().Emit(passivePersons);
         }
 
+        public void SetNumberOfPersons(int n)
+        {
+            passivePersons = n - teams.Sum(t => t.persons);
+            if (passivePersons < 0) throw new ArgumentException("invalid number of persons. They are working on the road.");
+            transform.GetChild(0).GetComponent<ParticleSystem>().Emit(passivePersons);
+        }
+
         public void launchTeam(int id, int persons)
         {
             teams.Add(new Team(id, Instantiate(prototypeTeam), persons, this));

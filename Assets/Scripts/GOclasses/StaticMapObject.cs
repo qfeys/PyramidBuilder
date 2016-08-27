@@ -17,7 +17,8 @@ namespace Assets.Scripts.GOclasses
 
         internal void SetNumberOfPersons(int n)
         {
-            transform.GetChild(0).GetComponent<ParticleSystem>().Emit(n);
+            var em = transform.GetChild(0).GetComponent<ParticleSystem>().emission;
+            em.rate = new ParticleSystem.MinMaxCurve(n / 60);
             numberOfpersons = n;
         }
     }
