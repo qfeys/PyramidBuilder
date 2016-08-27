@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 namespace Assets.Scripts
@@ -20,6 +21,8 @@ namespace Assets.Scripts
         internal readonly Construction construction = new Construction();
         internal readonly Military military = new Military();
 
+        static internal System.Random random = new System.Random();
+
         // Use this for initialization
         void Start()
         {
@@ -38,13 +41,13 @@ namespace Assets.Scripts
             {
                 clock = 0;
                 time++;
-                People.Tick();
                 farm.Tick();
                 quarry.Tick();
                 road.Tick();
                 river.Tick();
                 construction.Tick();
                 military.Tick();
+                People.Tick();
             }
         }
 

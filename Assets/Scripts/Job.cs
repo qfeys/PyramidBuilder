@@ -7,7 +7,6 @@ namespace Assets.Scripts
 {
     abstract class Job
     {
-        static protected Random random = new Random();
         protected float techProgress;
 
         abstract internal void Tick();
@@ -15,7 +14,7 @@ namespace Assets.Scripts
 
     class Farm : Job
     {
-        protected float stock;
+        public  float stock { get; private set; }
         float efficiency = 1;
         float production { get { return People.PeopleAt(People.Community.farm) * efficiency * People.Productivity(People.Community.farm); } }
         internal override void Tick()
@@ -26,6 +25,11 @@ namespace Assets.Scripts
                 stock = production * 2;
                 God.TheOne.Console("Food stock overflow. Stop wasting food!");
             }
+        }
+
+        internal void TakeFood(float requestedFood)
+        {
+            stock -= requestedFood;
         }
     }
 
@@ -63,7 +67,7 @@ namespace Assets.Scripts
             }
             for (int i = teamsOnTheWay.Count - 1; i >= 0; i--)
             {
-                if(random.NextDouble()<People.Productivity(People.Community.transportRoad))
+                if(God.random.NextDouble()<People.Productivity(People.Community.transportRoad))
                     teamsOnTheWay[i].Time++;        // If the productivity is to low, somtimes they will not move.
                 if(teamsOnTheWay[i].Time > transportTime)
                 {
@@ -88,7 +92,7 @@ namespace Assets.Scripts
         int dockStock;
         List<Boat> boats = new List<Boat>() { new Boat(), new Boat() };
         public enum Priority { smallest, fastest};
-        public Priority priority;
+        public Priority priority = Priority.smallest;
         internal override void Tick()
         {
             while (dockStock > 0)
@@ -133,7 +137,7 @@ namespace Assets.Scripts
                 {
                     if (timeTillArrival > 0)
                     {
-                        if (random.NextDouble() < People.Productivity(People.Community.transportRiver))
+                        if (God.random.NextDouble() < People.Productivity(People.Community.transportRiver))
                             timeTillArrival--;      // Sometimes they will not move if productivity is to low
                         if(timeTillArrival == 0)    // Boat just arrived
                         {
