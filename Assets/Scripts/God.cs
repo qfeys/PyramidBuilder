@@ -23,14 +23,15 @@ namespace Assets.Scripts
 
         static internal System.Random random = new System.Random();
 
+        public void Awake() { if (TheOne == null) TheOne = this; }
         // Use this for initialization
         void Start()
         {
-            if (TheOne == null) TheOne = this;
             time = new DateTime(1, 1, 1);
             People.Init();
             timeSetting = 1;
             isPaused = true;
+            RealmOverview.TheOne.Init();
         }
 
         // Update is called once per frame

@@ -11,9 +11,9 @@ namespace Assets.Scripts
     {
         static public Outliner TheOne;
 
+        public void Awake() { if (TheOne == null) TheOne = this; }
         public void Start()
         {
-            if (TheOne == null) TheOne = this;
         }
 
         public void Update()
