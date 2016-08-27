@@ -51,6 +51,7 @@ namespace Assets.Scripts
                 if (time.Day == 1)              // Monthly tick
                 {
                     People.Tick();
+                    RealmOverview.TheOne.UpdateUnrest();
                 }
             }
         }

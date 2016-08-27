@@ -19,7 +19,7 @@ namespace Assets.Scripts
         // Use this for initialization
         void Start()
         {
-            //gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         public void Init()
@@ -61,6 +61,15 @@ namespace Assets.Scripts
         {
             People.TrySetFood(com, value);
             transform.Find(com.ToString()).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetComponent<Text>().text = People.foodAllowance[com].ToString("0.00");
+        }
+
+        public void UpdateUnrest()
+        {
+            var comList = People.communityList;
+            for (int i = 0; i < comList.Count; i++)
+            {
+                transform.GetChild(i + 1).GetChild(0).GetChild(1).GetComponent<Text>().text = "Unrest: " + Mathf.Clamp01(People.unrest[comList[i]]).ToString("##0%");
+            }
         }
     }
 }

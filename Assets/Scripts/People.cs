@@ -54,7 +54,6 @@ namespace Assets.Scripts
 
                 statisticalGrowth += Math.Pow(1 + growth / 100, 1 / 12f) * PeopleAt(com);
             }
-            Debug.Log("" + statisticalGrowth);
             totalPopulation += (int)statisticalGrowth + God.random.NextDouble() < statisticalGrowth - Math.Floor(statisticalGrowth) ? 1 : 0;
             // unrest
             float suppression = God.TheOne.military.totalSuppression / totalPopulation;
