@@ -91,5 +91,10 @@ namespace Assets.Scripts
         {
             Debug.Log(s);
         }
+
+        internal static void UpdatePeopleDrawn()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

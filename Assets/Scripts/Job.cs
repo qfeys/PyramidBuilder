@@ -55,6 +55,7 @@ namespace Assets.Scripts
         int teamsize = 10;
         int transportTime = 5;      // time to bring a stone to the docks
         List<Team> teamsOnTheWay = new List<Team>();
+        public int peopleBusy { get { return teamsOnTheWay.Sum(t => t.people); } }
 
         internal override void Tick()
         {
@@ -94,6 +95,9 @@ namespace Assets.Scripts
         List<Boat> boats = new List<Boat>() { new Boat(), new Boat() };
         public enum Priority { smallest, fastest};
         public Priority priority = Priority.smallest;
+
+        public float peopleBusy { get { return boats.Sum(b => b.crew); } }
+
         internal override void Tick()
         {
             while (dockStock > 0)

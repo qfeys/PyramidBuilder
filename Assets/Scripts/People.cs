@@ -93,13 +93,21 @@ namespace Assets.Scripts
         {
             var comList = communityList;
             float personDiff = (int)((populationDistribution[com] - value) );
-            Debug.LogError("old: " + populationDistribution[com] + " , new: " + value + " , total Population" + totalPopulation);
-            Debug.Log("personDiff: " + personDiff);
             float equalShare = personDiff / (comList.Count-1);
-            Debug.Log("Equal share: " + equalShare);
             communityList.ForEach(c => populationDistribution[c] += equalShare);
+            if (God.TheOne.road.peopleBusy > populationDistribution[Community.transportRoad] * totalPopulation)
+            {
+                populationDistribution[Community.transportRoad] = God.TheOne.road.peopleBusy / totalPopulation;
+                RealmOverview.TheOne.LockPopBar(Community.transportRoad);
+            }
+            if (God.TheOne.river.peopleBusy > populationDistribution[Community.transportRiver] * totalPopulation)
+            {
+                populationDistribution[Community.transportRiver] = God.TheOne.river.peopleBusy / totalPopulation;
+                RealmOverview.TheOne.LockPopBar(Community.transportRiver);
+            }
             populationDistribution[com] = value;
             SanitisePopDist();
+            God.UpdatePeopleDrawn();
             
         }
 

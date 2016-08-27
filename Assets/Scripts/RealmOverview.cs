@@ -14,6 +14,9 @@ namespace Assets.Scripts
 
         public void Awake() { if (TheOne == null) TheOne = this; }
 
+        Color colorNorm = new Color(219, 204, 77);
+        Color colorAlert = new Color(218, 32, 32);
+
 
 
         // Use this for initialization
@@ -70,6 +73,11 @@ namespace Assets.Scripts
             {
                 transform.GetChild(i + 1).GetChild(0).GetChild(1).GetComponent<Text>().text = "Unrest: " + Mathf.Clamp01(People.unrest[comList[i]]).ToString("##0%");
             }
+        }
+
+        internal void LockPopBar(People.Community com)
+        {
+            transform.Find(com.ToString()).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>().color = colorAlert;
         }
     }
 }
