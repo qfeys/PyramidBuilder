@@ -16,6 +16,11 @@ namespace Assets.Scripts
             if (TheOne == null) TheOne = this;
         }
 
+        public void Update()
+        {
+            transform.Find("PanelTime").GetChild(1).GetComponent<Text>().text = new DateTime(1, 1, 1).AddDays(God.TheOne.time).ToString("MM-dd");
+        }
+
         public void TimeUp()
         {
             God.TheOne.timeSetting++;

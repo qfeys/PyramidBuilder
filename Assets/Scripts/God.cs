@@ -7,7 +7,7 @@ namespace Assets.Scripts
     public class God : MonoBehaviour {
         public static God TheOne;
 
-        int time;
+        public int time { get; private set; }
         float clock;
         public int timeSetting;
         Dictionary<int, float> deltaTime = new Dictionary<int, float>() { { 1, 1.0f }, { 2, 0.5f }, { 3, 0.25f }, { 4, 0.125f }, { 5, 0.0625f } };
@@ -32,10 +32,12 @@ namespace Assets.Scripts
 
         // Update is called once per frame
         void Update() {
-            clock += Time.deltaTime;
+            if (isPaused == false)
+                clock += Time.deltaTime;
             if(clock >= deltaTime[timeSetting])
             {
                 clock = 0;
+                time++;
                 People.Tick();
                 farm.Tick();
                 quarry.Tick();
