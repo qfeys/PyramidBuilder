@@ -91,5 +91,19 @@ namespace Assets.Scripts
             }
             Debug.Log("" + populationDistribution.Sum(kvp => kvp.Value));
         }
+
+        static public void TrySetPopulation(Community com, float value)
+        {
+            float others = populationDistribution.Where(kvp => kvp.Key != com).Sum(kvp => kvp.Value);
+            if (others == 0) others = float.Epsilon;
+            float reductionRatio = (1 - value) / others;
+            communityList.ForEach(c => populationDistribution[c] *= reductionRatio);
+            populationDistribution[com] = value;
+        }
+
+        static public void TrySetFood(Community com, float value)
+        {
+            foodAllowance[com] = Mathf.Clamp(value, 0, 2);
+        }
     }
 }

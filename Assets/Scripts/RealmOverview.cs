@@ -19,7 +19,7 @@ namespace Assets.Scripts
         // Use this for initialization
         void Start()
         {
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
         }
 
         public void Init()
@@ -28,8 +28,11 @@ namespace Assets.Scripts
             {
                 Transform panel = Instantiate(commuityPanel).transform;
                 panel.SetParent(transform);
+                panel.name = com.ToString();
                 panel.GetChild(0).GetChild(0).GetComponent<Text>().text = com.ToString();
-                Debug.Log("Panel: " + com.ToString());
+                var c = com;
+                panel.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetComponent<Slider>().onValueChanged.AddListener((v) => TrySetPopulation(c, v));
+                panel.GetChild(1).GetChild(0).GetChild(1).GetChild(0).GetComponent<Slider>().onValueChanged.AddListener((v) => TrySetFood(c, v));
             }
         }
 
@@ -37,6 +40,27 @@ namespace Assets.Scripts
         void Update()
         {
 
+        }
+
+        bool isChanging = false;
+        public void TrySetPopulation(People.Community com, float value)
+        {
+            if (isChanging) return;
+            isChanging = true;
+            People.TrySetPopulation(com, value);
+            var comList = People.communityList;
+            for (int i = 0; i < comList.Count; i++)
+            {
+                transform.GetChild(i+1).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetComponent<Slider>().value = People.populationDistribution[comList[i]];
+                transform.GetChild(i+1).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetComponent<Text>().text = People.PeopleAt(comList[i]).ToString("# ##0");
+            }
+            isChanging = false;
+        }
+
+        public void TrySetFood(People.Community com, float value)
+        {
+            People.TrySetFood(com, value);
+            transform.Find(com.ToString()).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetComponent<Text>().text = People.foodAllowance[com].ToString("0.00");
         }
     }
 }
