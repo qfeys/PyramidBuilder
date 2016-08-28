@@ -230,6 +230,11 @@ namespace Assets.Scripts
             stock -= workOnPyramid;
             totalWork -= workOnPyramid;
             progress += workOnPyramid;
+            if (progress >= pyramidLevels[God.TheOne.pyramidTracker])
+            {
+                God.TheOne.pyramidTracker++;
+                progress = 0;
+            }
             //if (totalWork > 0) God.TheOne.Console("" + totalWork.ToString("n2") + " tasks worth of work is being wasted by your construction crew.");
         }
 
@@ -243,6 +248,8 @@ namespace Assets.Scripts
             public Task(string name, float work, Action onCompletion) { this.name = name; this.work = work; this.onCompletion = onCompletion; }
             
         }
+
+        public readonly static List<float> pyramidLevels = new List<float>() { 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000 };
     }
 
     class Military : Job

@@ -14,6 +14,8 @@ namespace Assets.Scripts
         Dictionary<int, float> deltaTime = new Dictionary<int, float>() { { 1, 1.0f }, { 2, 0.5f }, { 3, 0.25f }, { 4, 0.125f }, { 5, 0.0625f } };
         public bool isPaused;
 
+        public int pyramidTracker = 0;
+
         internal readonly Farm farm = new Farm();
         internal readonly Quarry quarry = new Quarry();
         internal readonly Road road = new Road();

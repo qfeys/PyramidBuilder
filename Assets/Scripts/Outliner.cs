@@ -34,6 +34,9 @@ namespace Assets.Scripts
             transform.Find("PanelPopulation").GetChild(1).GetComponent<Text>().text = People.totalPopulation.ToString("# ##0");
             transform.Find("PanelFood").GetChild(1).GetComponent<Text>().text = God.TheOne.farm.stock.ToString("# ##0");
             transform.Find("PanelFood").GetChild(3).GetComponent<Text>().text = God.TheOne.farm.storageCapacity.ToString("# ##0");
+            transform.Find("PanelSmallProgress").GetChild(1).GetComponent<Text>().text = God.TheOne.construction.progress.ToString("# ##0");
+            transform.Find("PanelSmallProgress").GetChild(3).GetComponent<Text>().text = Construction.pyramidLevels[God.TheOne.pyramidTracker].ToString("# ##0");
+            transform.Find("PanelBigProgress").GetChild(1).GetComponent<Text>().text = God.TheOne.pyramidTracker.ToString("# ##0");
             try {
                 UpdateInfoPanel(); }catch(NullReferenceException e) { Debug.Log("Null caught " + e.StackTrace); }
         }
