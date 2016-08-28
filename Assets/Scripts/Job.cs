@@ -15,7 +15,7 @@ namespace Assets.Scripts
     class Farm : Job
     {
         public  float stock { get; private set; }
-        float efficiency = 3;
+        float efficiency = 5;
         public float production { get { return People.PeopleAt(People.Community.farm) * efficiency * People.Productivity(People.Community.farm); } }
         public float storageCapacity { get; private set; }
 
@@ -39,7 +39,7 @@ namespace Assets.Scripts
     class Quarry : Job
     {
         public float stock { get; private set; }
-        float efficiency = 0.005f;   // you need 200 people to make 1 stone
+        float efficiency = 0.01f;   // you need 100 people to make 1 stone
         public float production { get { return People.PeopleAt(People.Community.quarry) * efficiency * People.Productivity(People.Community.quarry); } }
         internal override void Tick()
         {
@@ -115,7 +115,7 @@ namespace Assets.Scripts
         public float peopleFree { get { return (People.PeopleAt(People.Community.river) - peopleBusy); } }
         public int stonesInTransit { get { return boats.Sum(t => t.stones); } }
 
-        public River() { boats = new List<Boat>() { new Boat("Elise") }; }
+        public River() { boats = new List<Boat>(); }
         internal override void Tick()
         {
             boats.ForEach(b => b.Tick());
@@ -137,6 +137,7 @@ namespace Assets.Scripts
 
         public class Boat
         {
+            readonly public int id;
             public string name;
             public int crew { get; private set; }
             public int stones { get; private set; }
@@ -149,11 +150,13 @@ namespace Assets.Scripts
             readonly public int maxTravelTime; // How many ticks this boat needs to take the trip on maximum crew
             public bool IsActive { get { return crew >= minCrew; } }
             public bool mayLeave = true;
+            static int idcounter = 0;
 
             public Boat(string name, int capacity = 25, int minCrew = 30, int maxCrew = 40, int minSpeed = 10, int maxSpeed = 15)
             {
                 this.name = name; this.capacity = capacity; this.minCrew = minCrew; this.maxCrew = maxCrew; this.minTravelTime = minSpeed; maxTravelTime = maxSpeed;
-                crew = 0; stones = 0; timeTillArrival = 0; isInDock = true;
+                crew = 0; stones = 0; timeTillArrival = 0; isInDock = true; id = idcounter; idcounter++;
+                God.TheOne.riverGO.launchTeam(id, crew);
             }
 
             public void Tick()
@@ -216,7 +219,7 @@ namespace Assets.Scripts
     class Construction : Job
     {
         public float stock { get; set; }
-        float constructionSpeed = 0.05f;   // you need 20 people to place 1 stone
+        float constructionSpeed = 0.001f;   // you need 100 people to place 1 stone
         public float workSpeed { get { return People.PeopleAt(People.Community.construction) * constructionSpeed * People.Productivity(People.Community.construction); } }
         public Queue<Task> tasks { get; private set; }
         public float progress { get; private set; }

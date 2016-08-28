@@ -44,6 +44,8 @@ namespace Assets.Scripts
             timeSetting = 1;
             isPaused = true;
             RealmOverview.TheOne.Init();
+
+            river.boats.Add(new River.Boat("Elise"));
         }
 
         // Update is called once per frame
@@ -66,7 +68,6 @@ namespace Assets.Scripts
                     RealmOverview.TheOne.UpdateUnrest();
                 }
                 AdditionalUpdates();
-                AddPyramid();
             }
         }
 

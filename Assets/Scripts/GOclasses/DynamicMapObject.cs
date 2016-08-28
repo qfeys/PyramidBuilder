@@ -41,8 +41,8 @@ namespace Assets.Scripts.GOclasses
             if (passivePersons < 0) throw new ArgumentException("invalid number of persons. They are working on the road.");
             var em = transform.GetChild(0).GetComponent<ParticleSystem>().emission;
             var rate = new ParticleSystem.MinMaxCurve();
-            rate.constantMin = passivePersons / 60f;
-            rate.constantMax = passivePersons / 60f;
+            rate.constantMin = passivePersons / 30f;
+            rate.constantMax = passivePersons / 30f;
             em.rate = rate;
         }
 
@@ -51,8 +51,8 @@ namespace Assets.Scripts.GOclasses
             Team t = new Team(id, Instantiate(prototypeTeam), persons, this);
             var em = t.core.GetComponent<ParticleSystem>().emission;
             var rate = new ParticleSystem.MinMaxCurve();
-            rate.constantMin = persons / 60f;
-            rate.constantMax = persons / 60f;
+            rate.constantMin = persons / 30f;
+            rate.constantMax = persons / 30f;
             em.rate = rate;
             t.core.GetComponent<ParticleSystem>().Play();
             teams.Add(t);
@@ -66,6 +66,7 @@ namespace Assets.Scripts.GOclasses
             while (distanceTraveled > distances[i])
             {
                 distanceTraveled -= distances[i];
+                if (i == distances.Count - 1) break;
                 i++;
             }
             float fractionOfLastLeg = distanceTraveled / distances[i];
@@ -82,7 +83,7 @@ namespace Assets.Scripts.GOclasses
         {
             public readonly int id;
             public readonly GameObject core;
-            public readonly int persons;
+            public int persons { get; private set; }
             readonly DynamicMapObject boss;
             public float progress { get; private set; }
             public Team(int id, GameObject core, int persons, DynamicMapObject boss)
@@ -98,6 +99,15 @@ namespace Assets.Scripts.GOclasses
                 core.transform.position = boss.FindPosition(progress);
             }
 
+            public void SetPersons(int newPersons)
+            {
+                persons = newPersons;
+                var em = core.GetComponent<ParticleSystem>().emission;
+                var rate = new ParticleSystem.MinMaxCurve();
+                rate.constantMin = persons / 30f;
+                rate.constantMax = persons / 30f;
+                em.rate = rate;
+            }
         }
 
     }

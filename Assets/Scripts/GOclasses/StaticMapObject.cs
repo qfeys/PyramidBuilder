@@ -21,8 +21,8 @@ namespace Assets.Scripts.GOclasses
             numberOfpersons = n;
             var em = transform.GetChild(0).GetComponent<ParticleSystem>().emission;
             var rate = new ParticleSystem.MinMaxCurve();
-            rate.constantMin = n / 60f;
-            rate.constantMax = n / 60f;
+            rate.constantMin = n / 30f;
+            rate.constantMax = n / 30f;
             em.rate = rate;
         }
 
