@@ -10,7 +10,7 @@ namespace Assets.Scripts
     {
 
         public static int totalPopulation { get; private set; }
-        public enum Community { farm, quarry, transportRoad, transportRiver, construction, military };
+        public enum Community { farm, quarry, road, river, construction, military };
         static public Dictionary<Community, float> populationDistribution { get; private set; }
         static public Dictionary<Community, float> foodAllowance { get; private set; }
         static public Dictionary<Community, float> unrest { get; private set; }
@@ -95,15 +95,15 @@ namespace Assets.Scripts
             float personDiff = (int)((populationDistribution[com] - value) );
             float equalShare = personDiff / (comList.Count-1);
             communityList.ForEach(c => populationDistribution[c] += equalShare);
-            if (God.TheOne.road.peopleBusy > populationDistribution[Community.transportRoad] * totalPopulation)
+            if (God.TheOne.road.peopleBusy > populationDistribution[Community.road] * totalPopulation)
             {
-                populationDistribution[Community.transportRoad] = (float)God.TheOne.road.peopleBusy / totalPopulation;
-                RealmOverview.TheOne.LockPopBar(Community.transportRoad);
+                populationDistribution[Community.road] = (float)God.TheOne.road.peopleBusy / totalPopulation;
+                RealmOverview.TheOne.LockPopBar(Community.road);
             }
-            if (God.TheOne.river.peopleBusy > populationDistribution[Community.transportRiver] * totalPopulation)
+            if (God.TheOne.river.peopleBusy > populationDistribution[Community.river] * totalPopulation)
             {
-                populationDistribution[Community.transportRiver] = God.TheOne.river.peopleBusy / totalPopulation;
-                RealmOverview.TheOne.LockPopBar(Community.transportRiver);
+                populationDistribution[Community.river] = God.TheOne.river.peopleBusy / totalPopulation;
+                RealmOverview.TheOne.LockPopBar(Community.river);
             }
             populationDistribution[com] = value;
             SanitisePopDist();

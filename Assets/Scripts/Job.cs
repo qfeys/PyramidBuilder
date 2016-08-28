@@ -63,7 +63,7 @@ namespace Assets.Scripts
         public Road() { teamsOnTheWay = new List<Team>(); }
         internal override void Tick()
         {
-            int availablePeople = People.PeopleAt(People.Community.transportRoad) - teamsOnTheWay.Sum(t => t.people);
+            int availablePeople = People.PeopleAt(People.Community.road) - teamsOnTheWay.Sum(t => t.people);
             if (availablePeople < 0) God.TheOne.Console("Road has negative people!");
             int availableStones = God.TheOne.quarry.HasStones();
             int stonesToBeMoved = Math.Min(availablePeople / teamsize, availableStones);
@@ -73,7 +73,7 @@ namespace Assets.Scripts
             }
             for (int i = teamsOnTheWay.Count - 1; i >= 0; i--)
             {
-                if(God.random.NextDouble()<People.Productivity(People.Community.transportRoad))
+                if(God.random.NextDouble()<People.Productivity(People.Community.road))
                     teamsOnTheWay[i].TimeLeft--;        // If the productivity is to low, somtimes they will not move.
                 if(teamsOnTheWay[i].TimeLeft <= 0)
                 {
@@ -89,7 +89,7 @@ namespace Assets.Scripts
             readonly public int people;
             readonly public int stones;
             public int TimeLeft;
-            public Team(int people, int stones, int transportTime) { this.people = people; this.stones = stones; TimeLeft = 0; }
+            public Team(int people, int stones, int transportTime) { this.people = people; this.stones = stones; TimeLeft = transportTime; }
         }
     }
 
@@ -101,6 +101,7 @@ namespace Assets.Scripts
         public Priority priority = Priority.smallest;
 
         public float peopleBusy { get { return boats.Sum(b => b.crew); } }
+        public int stonesInTransit { get { return boats.Sum(t => t.stones); } }
 
         public River() { boats = new List<Boat>() { new Boat("Elise") }; }
         internal override void Tick()
@@ -149,7 +150,7 @@ namespace Assets.Scripts
                 {
                     if (timeTillArrival > 0)
                     {
-                        if (God.random.NextDouble() < People.Productivity(People.Community.transportRiver))
+                        if (God.random.NextDouble() < People.Productivity(People.Community.river))
                             timeTillArrival--;      // Sometimes they will not move if productivity is to low
                         if(timeTillArrival == 0)    // Boat just arrived
                         {

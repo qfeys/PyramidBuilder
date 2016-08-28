@@ -18,6 +18,7 @@ namespace Assets.Scripts
         public GameObject RiverInfoPanel;
 
         public GameObject TeamOverview;
+        public GameObject BoatOverview;
 
         public void Awake() { if (TheOne == null) TheOne = this; }
         public void Start()
@@ -90,11 +91,19 @@ namespace Assets.Scripts
                 panel.GetChild(1).Find("Tasks1").GetChild(0).GetComponent<Text>().text = taskNames;
                 panel.GetChild(1).Find("Tasks1").GetChild(1).GetComponent<Text>().text = taskWork;
                 break;
-            case People.Community.transportRoad:
-                Road r = God.TheOne.road;
-                panel.GetChild(1).Find("Transit").GetChild(1).GetComponent<Text>().text = r.stonesInTransit.ToString("# ##0");
-                panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = r.techProgress.ToString("# ##0");
-                
+            case People.Community.road:
+                Road ro = God.TheOne.road;
+                panel.GetChild(1).Find("Transit").GetChild(1).GetComponent<Text>().text = ro.stonesInTransit.ToString("# ##0");
+                panel.GetChild(1).Find("FreePeople").GetChild(1).GetComponent<Text>().text = (People.PeopleAt(People.Community.river) - ro.peopleBusy).ToString("# ##0");
+                panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = ro.techProgress.ToString("# ##0");
+                break;
+            case People.Community.river:
+                River ri = God.TheOne.river;
+                panel.GetChild(1).Find("Transit").GetChild(1).GetComponent<Text>().text = ri.stonesInTransit.ToString("# ##0");
+                panel.GetChild(1).Find("NumberOfBoats").GetChild(1).GetComponent<Text>().text = ri.boats.Count.ToString("# ##0");
+                panel.GetChild(1).Find("FreePeople").GetChild(1).GetComponent<Text>().text = (People.PeopleAt(People.Community.river) - ri.peopleBusy).ToString("# ##0");
+                panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = ri.techProgress.ToString("# ##0");
+
                 break;
             }
         }
@@ -113,12 +122,14 @@ namespace Assets.Scripts
             case People.Community.farm: newInfo = Instantiate(FarmInfoPanel); break;
             case People.Community.quarry: newInfo = Instantiate(QuarryInfoPanel); break;
             case People.Community.construction: newInfo = Instantiate(ConstructionInfoPanel); break;
-            case People.Community.transportRoad:
+            case People.Community.road:
                 newInfo = Instantiate(RoadInfoPanel);
-                var b = newInfo.transform.Find("Teams").GetChild(0).GetComponent<Button>();
-                b.onClick.AddListener(() => ToggleRoadPanel());
+                newInfo.transform.Find("Teams").GetChild(0).GetComponent<Button>().onClick.AddListener(() => ToggleRoadPanel());
                 break;
-            case People.Community.transportRiver: newInfo = Instantiate(RiverInfoPanel); break;
+            case People.Community.river:
+                newInfo = Instantiate(RiverInfoPanel);
+                newInfo.transform.Find("Boats").GetChild(0).GetComponent<Button>().onClick.AddListener(() => ToggleRiverPanel());
+                break;
             }
             newInfo.transform.SetParent(panel);
         }
@@ -130,6 +141,11 @@ namespace Assets.Scripts
         public void ToggleRoadPanel()
         {
             TeamOverview.SetActive(!TeamOverview.activeSelf);
+        }
+
+        public void ToggleRiverPanel()
+        {
+            BoatOverview.SetActive(!BoatOverview.activeSelf);
         }
 
         public void ToggleSetCrewForBoatPanel(River.Boat boat)

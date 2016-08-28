@@ -34,8 +34,8 @@ namespace Assets.Scripts
                     newPanel.transform.GetChild(0).GetComponent<Text>().text = boat.name;
                     newPanel.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = boat.minCrew.ToString("# ##0");
                     newPanel.transform.GetChild(2).GetChild(1).GetComponent<Text>().text = boat.maxCrew.ToString("# ##0");
+                    newPanel.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() => Outliner.TheOne.ToggleSetCrewForBoatPanel(boat));
                     newPanel.transform.GetChild(4).GetChild(1).GetComponent<Text>().text = boat.capacity.ToString("# ##0");
-                    newPanel.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => Outliner.TheOne.ToggleSetCrewForBoatPanel(boat));
                     newPanel.transform.GetChild(6).GetChild(0).GetComponent<Text>().text = boat.minTravelTime.ToString("# ##0");
                     newPanel.transform.GetChild(6).GetChild(1).GetComponent<Text>().text = boat.maxTravelTime.ToString("# ##0");
                     newPanel.transform.GetChild(8).GetComponent<Toggle>().onValueChanged.AddListener(b => boat.mayLeave = b);
