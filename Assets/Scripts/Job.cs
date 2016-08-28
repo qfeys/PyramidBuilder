@@ -96,12 +96,13 @@ namespace Assets.Scripts
     class River : Job
     {
         int dockStock;
-        List<Boat> boats = new List<Boat>() { new Boat(), new Boat() };
+        public List<Boat> boats { get; private set; }
         public enum Priority { smallest, fastest};
         public Priority priority = Priority.smallest;
 
         public float peopleBusy { get { return boats.Sum(b => b.crew); } }
 
+        public River() { boats = new List<Boat>() { new Boat("Elise") }; }
         internal override void Tick()
         {
             while (dockStock > 0)
@@ -121,8 +122,9 @@ namespace Assets.Scripts
 
         internal void newStonesArrive(int stones) { dockStock += stones; }
 
-        class Boat
+        public class Boat
         {
+            public string name;
             public int crew { get; private set; }
             public int stones { get; private set; }
             public int timeTillArrival { get; private set; }
@@ -134,9 +136,9 @@ namespace Assets.Scripts
             readonly public int maxTravelTime; // How many ticks this boat needs to take the trip on maximum crew
             public bool IsActive { get { return crew >= minCrew; } }
 
-            public Boat(int capacity = 5, int minCrew = 10, int maxCrew = 10, int minSpeed = 5, int maxSpeed = 5)
+            public Boat(string name, int capacity = 5, int minCrew = 10, int maxCrew = 10, int minSpeed = 5, int maxSpeed = 5)
             {
-                this.capacity = capacity; this.minCrew = minCrew; this.maxCrew = maxCrew; this.minTravelTime = minSpeed; this.maxTravelTime = maxSpeed;
+                this.name = name; this.capacity = capacity; this.minCrew = minCrew; this.maxCrew = maxCrew; this.minTravelTime = minSpeed; this.maxTravelTime = maxSpeed;
                 crew = 0; stones = 0; timeTillArrival = 0;
             }
 
