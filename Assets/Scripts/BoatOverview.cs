@@ -12,7 +12,9 @@ namespace Assets.Scripts
     {
 
         public GameObject BoatPanelPrefab;
-        Dictionary<Transform, River.Boat> boatPanels;
+        public Color colorNorm;
+        public Color colorAlert;
+        Dictionary<Transform, River.Boat> boatPanels = new Dictionary<Transform, River.Boat>();
 
         public void OnDrag(PointerEventData eventData)
         {
@@ -29,20 +31,22 @@ namespace Assets.Scripts
                     GameObject newPanel = Instantiate(BoatPanelPrefab);
                     newPanel.transform.SetParent(transform);
                     boatPanels.Add(newPanel.transform, boat);
+                    newPanel.transform.GetChild(0).GetComponent<Text>().text = boat.name;
+                    newPanel.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = boat.minCrew.ToString("# ##0");
+                    newPanel.transform.GetChild(2).GetChild(1).GetComponent<Text>().text = boat.maxCrew.ToString("# ##0");
+                    newPanel.transform.GetChild(4).GetChild(1).GetComponent<Text>().text = boat.capacity.ToString("# ##0");
+                    newPanel.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => Outliner.TheOne.ToggleSetCrewForBoatPanel(boat));
+                    newPanel.transform.GetChild(6).GetChild(0).GetComponent<Text>().text = boat.minTravelTime.ToString("# ##0");
+                    newPanel.transform.GetChild(6).GetChild(1).GetComponent<Text>().text = boat.maxTravelTime.ToString("# ##0");
+                    newPanel.transform.GetChild(8).GetComponent<Toggle>().onValueChanged.AddListener(b => boat.mayLeave = b);
                 }
             }
 
             foreach(var panel in boatPanels)
             {
-                panel.Key.GetChild(0).GetComponent<Text>().text = panel.Value.name;
                 panel.Key.GetChild(1).GetComponent<Text>().text = panel.Value.crew.ToString("# ##0");
-                panel.Key.GetChild(2).GetChild(0).GetComponent<Text>().text = panel.Value.minCrew.ToString("# ##0");
-                panel.Key.GetChild(2).GetChild(1).GetComponent<Text>().text = panel.Value.maxCrew.ToString("# ##0");
                 panel.Key.GetChild(4).GetChild(0).GetComponent<Text>().text = panel.Value.stones.ToString("# ##0");
-                panel.Key.GetChild(4).GetChild(1).GetComponent<Text>().text = panel.Value.capacity.ToString("# ##0");
                 panel.Key.GetChild(5).GetComponent<Text>().text = panel.Value.timeTillArrival.ToString("# ##0");
-                panel.Key.GetChild(6).GetChild(0).GetComponent<Text>().text = panel.Value.minTravelTime.ToString("# ##0");
-                panel.Key.GetChild(6).GetChild(1).GetComponent<Text>().text = panel.Value.maxTravelTime.ToString("# ##0");
                 panel.Key.GetChild(7).GetComponent<Toggle>().isOn = panel.Value.isInDock;
             }
         }

@@ -131,5 +131,10 @@ namespace Assets.Scripts
         {
             TeamOverview.SetActive(!TeamOverview.activeSelf);
         }
+
+        public void ToggleSetCrewForBoatPanel(River.Boat boat)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

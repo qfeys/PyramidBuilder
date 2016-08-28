@@ -135,6 +135,7 @@ namespace Assets.Scripts
             readonly public int minTravelTime; // How many ticks this boat needs to take the trip on minimum crew
             readonly public int maxTravelTime; // How many ticks this boat needs to take the trip on maximum crew
             public bool IsActive { get { return crew >= minCrew; } }
+            public bool mayLeave = true;
 
             public Boat(string name, int capacity = 5, int minCrew = 10, int maxCrew = 10, int minSpeed = 5, int maxSpeed = 5)
             {
