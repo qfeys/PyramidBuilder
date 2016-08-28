@@ -95,6 +95,7 @@ namespace Assets.Scripts
             float personDiff = (int)((populationDistribution[com] - value) );
             float equalShare = personDiff / (comList.Count-1);
             communityList.ForEach(c => populationDistribution[c] += equalShare);
+            populationDistribution[com] = value;
             if (God.TheOne.road.peopleBusy > populationDistribution[Community.road] * totalPopulation)
             {
                 populationDistribution[Community.road] = (float)God.TheOne.road.peopleBusy / totalPopulation;
@@ -105,7 +106,6 @@ namespace Assets.Scripts
                 populationDistribution[Community.river] = God.TheOne.river.peopleBusy / totalPopulation;
                 RealmOverview.TheOne.LockPopBar(Community.river);
             }
-            populationDistribution[com] = value;
             SanitisePopDist();
             God.TheOne.UpdatePeopleDrawn();
             

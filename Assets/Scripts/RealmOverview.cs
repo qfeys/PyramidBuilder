@@ -46,9 +46,9 @@ namespace Assets.Scripts
             if (isChanging) return;
             isChanging = true;
             var comList = People.communityList;
-            for(int i = 0; i<comList.Count;i++)
+            for(int i = 0; i<comList.Count;i++) // reset color
                 transform.GetChild(i + 1).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>().color = colorNorm;
-            People.TrySetPopulation(com, value);
+            People.TrySetPopulation(com, value);        // Set Values
             for (int i = 0; i < comList.Count; i++)
             {
                 transform.GetChild(i+1).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetComponent<Slider>().value = People.populationDistribution[comList[i]];
