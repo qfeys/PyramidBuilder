@@ -23,9 +23,8 @@ namespace Assets.Scripts
 
         public void Start()
         {
-            Action buildNewBoat = () => God.TheOne.river.boats.Add(new River.Boat("Sarah"));
+            Action buildNewBoat = () => God.TheOne.river.BuildNewBoat();
             transform.Find("BuildNew").GetComponent<Button>().onClick.AddListener(()=>Outliner.TheOne.ToggleConstructionPanel("Boat", 50, buildNewBoat));
-            // God.TheOne.river.boats.Add(new River.Boat("Sarah"))
         }
 
         public void Update()

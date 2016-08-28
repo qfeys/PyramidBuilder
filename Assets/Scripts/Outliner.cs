@@ -78,12 +78,14 @@ namespace Assets.Scripts
                 panel.GetChild(1).Find("Stock").GetChild(1).GetComponent<Text>().text = f.stock.ToString("# ##0");
                 panel.GetChild(1).Find("Capacity").GetChild(1).GetComponent<Text>().text = f.storageCapacity.ToString("# ##0");
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = f.techProgress.ToString("# ##0");
+                panel.GetChild(2).GetComponent<Button>().interactable = f.techProgress >= 1000;
                 break;
             case People.Community.quarry:
                 Quarry q = God.TheOne.quarry;
                 panel.GetChild(1).Find("Production").GetChild(1).GetComponent<Text>().text = q.production.ToString("# ##0");
                 panel.GetChild(1).Find("Stock").GetChild(1).GetComponent<Text>().text = q.stock.ToString("# ##0");
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = q.techProgress.ToString("# ##0");
+                panel.GetChild(2).GetComponent<Button>().interactable = q.techProgress >= 1000;
                 break;
             case People.Community.construction:
                 Construction c = God.TheOne.construction;
@@ -96,12 +98,14 @@ namespace Assets.Scripts
                 taskNames += "-----"; taskWork += "---";
                 panel.GetChild(1).Find("Tasks1").GetChild(0).GetComponent<Text>().text = taskNames;
                 panel.GetChild(1).Find("Tasks1").GetChild(1).GetComponent<Text>().text = taskWork;
+                panel.GetChild(2).GetComponent<Button>().interactable = c.techProgress >= 1000;
                 break;
             case People.Community.road:
                 Road ro = God.TheOne.road;
                 panel.GetChild(1).Find("Transit").GetChild(1).GetComponent<Text>().text = ro.stonesInTransit.ToString("# ##0");
                 panel.GetChild(1).Find("FreePeople").GetChild(1).GetComponent<Text>().text = (People.PeopleAt(People.Community.river) - ro.peopleBusy).ToString("# ##0");
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = ro.techProgress.ToString("# ##0");
+                panel.GetChild(2).GetComponent<Button>().interactable = ro.techProgress >= 1000;
                 break;
             case People.Community.river:
                 River ri = God.TheOne.river;
@@ -110,7 +114,7 @@ namespace Assets.Scripts
                 panel.GetChild(1).Find("NumberOfBoats").GetChild(1).GetComponent<Text>().text = ri.boats.Count.ToString("# ##0");
                 panel.GetChild(1).Find("FreePeople").GetChild(1).GetComponent<Text>().text = ri.peopleFree.ToString("# ##0");
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = ri.techProgress.ToString("# ##0");
-
+                panel.GetChild(2).GetComponent<Button>().interactable = ri.techProgress >= 1000;
                 break;
             }
         }
@@ -143,6 +147,18 @@ namespace Assets.Scripts
         public void RemovePanelInfo()
         {
             transform.Find("PanelCommunityInfo").gameObject.SetActive(false);
+        }
+
+        public void UpgradeActiveCom()
+        {
+            switch (currentPanelInfo)
+            {
+            case People.Community.farm: God.TheOne.farm.Upgrade(); break;
+            case People.Community.quarry: God.TheOne.quarry.Upgrade(); break;
+            case People.Community.construction: God.TheOne.construction.Upgrade(); break;
+            case People.Community.road: God.TheOne.road.Upgrade(); break;
+            case People.Community.river: God.TheOne.river.Upgrade(); break;
+            }
         }
 
         public void ToggleRoadPanel()

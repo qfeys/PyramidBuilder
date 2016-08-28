@@ -24,7 +24,7 @@ namespace Assets.Scripts
         public Farm() { storageCapacity = 50000; }
         internal override void Tick()
         {
-            techProgress += 1 + People.PeopleAt(People.Community.farm);
+            techProgress += 1 + People.PeopleAt(People.Community.farm) / 100;
             stock += production;
             if (stock > storageCapacity)
             {
@@ -48,11 +48,11 @@ namespace Assets.Scripts
     class Quarry : Job
     {
         public float stock { get; private set; }
-        float efficiency = 0.01f;   // you need 100 people to make 1 stone
+        float efficiency = 0.02f;   // you need 100 people to make 1 stone
         public float production { get { return People.PeopleAt(People.Community.quarry) * efficiency * People.Productivity(People.Community.quarry); } }
         internal override void Tick()
         {
-            techProgress += 1 + People.PeopleAt(People.Community.quarry);
+            techProgress += 1 + People.PeopleAt(People.Community.quarry) / 100;
             stock += production;
         }
 
@@ -84,7 +84,7 @@ namespace Assets.Scripts
         public Road() { teamsOnTheWay = new List<Team>(); teamsize = 15; transportTime = 14; }
         internal override void Tick()
         {
-            techProgress += 1 + People.PeopleAt(People.Community.road);
+            techProgress += 1 + People.PeopleAt(People.Community.road) / 100;
             int availablePeople = People.PeopleAt(People.Community.road) - teamsOnTheWay.Sum(t => t.people);
             if (availablePeople < 0) God.TheOne.Console("Road has negative people!");
             int availableStones = God.TheOne.quarry.HasStones();
@@ -140,7 +140,7 @@ namespace Assets.Scripts
         public River() { boats = new List<Boat>(); }
         internal override void Tick()
         {
-            techProgress += 1 + People.PeopleAt(People.Community.river);
+            techProgress += 1 + People.PeopleAt(People.Community.river) / 100;
             boats.ForEach(b => b.Tick());
             while (dockStock > 0)
             {
@@ -167,14 +167,22 @@ namespace Assets.Scripts
 
         public Boat BuildNewBoat()
         {
-            Boat b = new Boat("Emma", capacity, minCrew, maxCrew, minTravelTime, maxTravelTime);
+            Boat b = new Boat(boatNames[nextBoatName], capacity, minCrew, maxCrew, minTravelTime, maxTravelTime);
+            nextBoatName++;
             boats.Add(b);
             return b;
         }
+        int nextBoatName;
+        List<string> boatNames = new List<string>() { "Elizabeth", "Charlotte", "Jacqueline", "Jonathan" , "Isabella", "Genevieve", "Special Case", "Boat 7", "No Boat", "Lioness",
+        "Paradise", "Leeroy", "Why pyramids?", "Aliens, right"};
 
         internal override void Upgrade()
         {
-            throw new NotImplementedException();
+            capacity += capacity / 2;
+            maxCrew += 10;
+            minCrew += 5;
+            minTravelTime += 0;
+            maxTravelTime += 2;
         }
 
         public class Boat
@@ -261,14 +269,14 @@ namespace Assets.Scripts
     class Construction : Job
     {
         public float stock { get; set; }
-        float constructionSpeed = 0.001f;   // you need 100 people to place 1 stone
+        float constructionSpeed = 0.02f;   // you need 100 people to place 1 stone
         public float workSpeed { get { return People.PeopleAt(People.Community.construction) * constructionSpeed * People.Productivity(People.Community.construction); } }
         public Queue<Task> tasks { get; private set; }
         public float progress { get; private set; }
         public Construction() { tasks = new Queue<Task>(); progress = 0; }
         internal override void Tick()
         {
-            techProgress += 1 + People.PeopleAt(People.Community.construction);
+            techProgress += 1 + People.PeopleAt(People.Community.construction) / 100;
             float totalWork = People.PeopleAt(People.Community.construction) * constructionSpeed;
             while (totalWork > 0 && tasks.Count != 0)
             {
@@ -320,7 +328,7 @@ namespace Assets.Scripts
         public float totalSuppression { get { return People.PeopleAt(People.Community.military) * suppressionEfficiancy * People.Productivity(People.Community.military); } }
         internal override void Tick()
         {
-            techProgress += 1 + People.PeopleAt(People.Community.military);
+            techProgress += 1 + People.PeopleAt(People.Community.military) / 100;
             // Do nthing, I guess
         }
 
