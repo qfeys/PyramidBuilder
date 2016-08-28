@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
-    public class RealmOverview : MonoBehaviour
+    public class RealmOverview : MonoBehaviour ,IDragHandler
     {
         static public RealmOverview TheOne;
 
@@ -79,6 +80,11 @@ namespace Assets.Scripts
         internal void LockPopBar(People.Community com)
         {
             transform.Find(com.ToString()).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>().color = colorAlert;
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            transform.position += (Vector3)eventData.delta;
         }
     }
 }

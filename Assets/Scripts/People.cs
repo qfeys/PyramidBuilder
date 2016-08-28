@@ -20,9 +20,9 @@ namespace Assets.Scripts
         {
             totalPopulation = 1000;
             populationDistribution = communityList.ToDictionary(t => t, t => 0.2f);
+            SanitisePopDist();
             foodAllowance = communityList.ToDictionary(t => t, t => 1.0f);
             unrest = communityList.ToDictionary(t => t, t => 0.0f);
-            SanitisePopDist();
         }
 
         /// <summary>

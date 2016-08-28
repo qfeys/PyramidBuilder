@@ -16,7 +16,7 @@ namespace Assets.Scripts
     {
         public  float stock { get; private set; }
         float efficiency = 1;
-        float production { get { return People.PeopleAt(People.Community.farm) * efficiency * People.Productivity(People.Community.farm); } }
+        public float production { get { return People.PeopleAt(People.Community.farm) * efficiency * People.Productivity(People.Community.farm); } }
         public float storageCapacity { get; private set; }
 
         public Farm() { storageCapacity = 50000; }
@@ -38,9 +38,9 @@ namespace Assets.Scripts
 
     class Quarry : Job
     {
-        protected float stock;
+        public float stock { get; private set; }
         float efficiency = 0.05f;   // you need 20 people to make 1 stone
-        float production { get { return People.PeopleAt(People.Community.quarry) * efficiency * People.Productivity(People.Community.quarry); } }
+        public float production { get { return People.PeopleAt(People.Community.quarry) * efficiency * People.Productivity(People.Community.quarry); } }
         internal override void Tick()
         {
             stock += production;
@@ -184,10 +184,12 @@ namespace Assets.Scripts
 
     class Construction : Job
     {
-        internal float stock;
+        public float stock { get; set; }
         float constructionSpeed = 0.05f;   // you need 20 people to place 1 stone
-        Queue<Task> tasks = new Queue<Task>();
+        public float workSpeed { get { return People.PeopleAt(People.Community.construction) * constructionSpeed * People.Productivity(People.Community.construction); } }
+        public Queue<Task> tasks { get; private set; }
         float progress = 0;
+        public Construction() { tasks = new Queue<Task>(); }
         internal override void Tick()
         {
             float totalWork = People.PeopleAt(People.Community.construction) * constructionSpeed;
@@ -211,13 +213,14 @@ namespace Assets.Scripts
             //if (totalWork > 0) God.TheOne.Console("" + totalWork.ToString("n2") + " tasks worth of work is being wasted by your construction crew.");
         }
 
-        public void AddTask(float work, Action onCompletion) { tasks.Enqueue(new Task(work, onCompletion)); }
+        public void AddTask(string name, float work, Action onCompletion) { tasks.Enqueue(new Task(name, work, onCompletion)); }
 
-        class Task
+        public class Task
         {
+            public string name;
             public float work;
             public Action onCompletion { get; private set; }
-            public Task(float work, Action onCompletion) { this.work = work; this.onCompletion = onCompletion; }
+            public Task(string name, float work, Action onCompletion) { this.name = name; this.work = work; this.onCompletion = onCompletion; }
         }
     }
 

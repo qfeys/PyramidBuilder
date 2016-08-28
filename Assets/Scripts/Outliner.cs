@@ -17,6 +17,8 @@ namespace Assets.Scripts
         public GameObject RoadInfoPanel;
         public GameObject RiverInfoPanel;
 
+        public GameObject TeamOverview;
+
         public void Awake() { if (TheOne == null) TheOne = this; }
         public void Start()
         {
@@ -29,7 +31,9 @@ namespace Assets.Scripts
             transform.Find("PanelPopulation").GetChild(1).GetComponent<Text>().text = People.totalPopulation.ToString("# ##0");
             transform.Find("PanelFood").GetChild(1).GetComponent<Text>().text = God.TheOne.farm.stock.ToString("# ##0");
             transform.Find("PanelFood").GetChild(3).GetComponent<Text>().text = God.TheOne.farm.storageCapacity.ToString("# ##0");
-            UpdateInfoPanel();
+            try {
+                UpdateInfoPanel();
+            }catch (NullReferenceException e) { Debug.LogError("Caught a NullReferenceExeption " + e.StackTrace); }
         }
 
         public void TimeUp()
@@ -58,9 +62,36 @@ namespace Assets.Scripts
         {
             Transform panel = transform.Find("PanelCommunityInfo");
             if (panel.gameObject.activeSelf == false) return;
-            panel.GetChild(1).GetChild(1).GetComponent<Text>().text = People.PeopleAt(currentPanelInfo).ToString("# ##0");
-            panel.GetChild(2).GetChild(1).GetComponent<Text>().text = Mathf.Clamp01(People.unrest[currentPanelInfo]).ToString("##0%");
-            panel.GetChild(3).GetChild(1).GetComponent<Text>().text = (People.PeopleAt(currentPanelInfo) * People.foodAllowance[currentPanelInfo]).ToString("# ##0");
+            panel.GetChild(1).GetChild(1).GetChild(1).GetComponent<Text>().text = People.PeopleAt(currentPanelInfo).ToString("# ##0");
+            panel.GetChild(1).GetChild(2).GetChild(1).GetComponent<Text>().text = Mathf.Clamp01(People.unrest[currentPanelInfo]).ToString("##0%");
+            panel.GetChild(1).GetChild(3).GetChild(1).GetComponent<Text>().text = (People.PeopleAt(currentPanelInfo) * People.foodAllowance[currentPanelInfo]).ToString("# ##0");
+            switch (currentPanelInfo)
+            {
+            case People.Community.farm:
+                Farm f = God.TheOne.farm;
+                panel.GetChild(1).Find("Production").GetChild(1).GetComponent<Text>().text = f.production.ToString("# ##0");
+                panel.GetChild(1).Find("Stock").GetChild(1).GetComponent<Text>().text = f.stock.ToString("# ##0");
+                panel.GetChild(1).Find("Capacity").GetChild(1).GetComponent<Text>().text = f.storageCapacity.ToString("# ##0");
+                panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = f.techProgress.ToString("# ##0");
+                break;
+            case People.Community.quarry:
+                Quarry q = God.TheOne.quarry;
+                panel.GetChild(1).Find("Production").GetChild(1).GetComponent<Text>().text = q.production.ToString("# ##0");
+                panel.GetChild(1).Find("Stock").GetChild(1).GetComponent<Text>().text = q.stock.ToString("# ##0");
+                panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = q.techProgress.ToString("# ##0");
+                break;
+            case People.Community.construction:
+                Construction c = God.TheOne.construction;
+                panel.GetChild(1).Find("Production").GetChild(1).GetComponent<Text>().text = c.workSpeed.ToString("# ##0");
+                panel.GetChild(1).Find("Stock").GetChild(1).GetComponent<Text>().text = c.stock.ToString("# ##0");
+                panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = c.techProgress.ToString("# ##0");
+                string taskNames = ""; string taskWork = "";
+                foreach(var task in c.tasks) { taskNames += task.name + "\n";taskWork += task.work.ToString("# ##0") + "\n"; }
+                taskNames += "-----"; taskWork += "---";
+                panel.GetChild(1).Find("Tasks 1").GetChild(0).GetComponent<Text>().text = taskNames;
+                panel.GetChild(1).Find("Tasks 1").GetChild(1).GetComponent<Text>().text = taskWork;
+                break;
+            }
         }
 
         People.Community currentPanelInfo;
