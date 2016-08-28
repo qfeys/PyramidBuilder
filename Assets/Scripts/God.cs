@@ -45,7 +45,7 @@ namespace Assets.Scripts
             isPaused = true;
             RealmOverview.TheOne.Init();
 
-            river.boats.Add(new River.Boat("Elise"));
+            river.BuildNewBoat();
         }
 
         // Update is called once per frame

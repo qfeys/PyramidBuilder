@@ -158,6 +158,19 @@ namespace Assets.Scripts
 
         internal void newStonesArrive(int stones) { dockStock += stones; }
 
+        // New boat stats
+        int capacity = 25;
+        int minCrew = 30;
+        int maxCrew = 40;
+        int minTravelTime = 10; // How many ticks this boat needs to take the trip on minimum crew
+        int maxTravelTime = 15; // How many ticks this boat needs to take the trip on maximum crew
+
+        public Boat BuildNewBoat()
+        {
+            Boat b = new Boat("Emma", capacity, minCrew, maxCrew, minTravelTime, maxTravelTime);
+            boats.Add(b);
+            return b;
+        }
 
         internal override void Upgrade()
         {
