@@ -15,7 +15,7 @@ namespace Assets.Scripts
     class Farm : Job
     {
         public  float stock { get; private set; }
-        float efficiency = 1;
+        float efficiency = 3;
         public float production { get { return People.PeopleAt(People.Community.farm) * efficiency * People.Productivity(People.Community.farm); } }
         public float storageCapacity { get; private set; }
 
