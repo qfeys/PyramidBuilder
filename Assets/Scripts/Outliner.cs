@@ -32,8 +32,7 @@ namespace Assets.Scripts
             transform.Find("PanelFood").GetChild(1).GetComponent<Text>().text = God.TheOne.farm.stock.ToString("# ##0");
             transform.Find("PanelFood").GetChild(3).GetComponent<Text>().text = God.TheOne.farm.storageCapacity.ToString("# ##0");
             try {
-                UpdateInfoPanel();
-            }catch (NullReferenceException e) { Debug.LogError("Caught a NullReferenceExeption " + e.StackTrace); }
+                UpdateInfoPanel(); }catch(NullReferenceException e) { Debug.Log("Null caught " + e.StackTrace); }
         }
 
         public void TimeUp()
@@ -86,10 +85,16 @@ namespace Assets.Scripts
                 panel.GetChild(1).Find("Stock").GetChild(1).GetComponent<Text>().text = c.stock.ToString("# ##0");
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = c.techProgress.ToString("# ##0");
                 string taskNames = ""; string taskWork = "";
-                foreach(var task in c.tasks) { taskNames += task.name + "\n";taskWork += task.work.ToString("# ##0") + "\n"; }
+                foreach (var task in c.tasks) { taskNames += task.name + "\n"; taskWork += task.work.ToString("# ##0") + "\n"; }
                 taskNames += "-----"; taskWork += "---";
-                panel.GetChild(1).Find("Tasks 1").GetChild(0).GetComponent<Text>().text = taskNames;
-                panel.GetChild(1).Find("Tasks 1").GetChild(1).GetComponent<Text>().text = taskWork;
+                panel.GetChild(1).Find("Tasks1").GetChild(0).GetComponent<Text>().text = taskNames;
+                panel.GetChild(1).Find("Tasks1").GetChild(1).GetComponent<Text>().text = taskWork;
+                break;
+            case People.Community.transportRoad:
+                Road r = God.TheOne.road;
+                panel.GetChild(1).Find("Transit").GetChild(1).GetComponent<Text>().text = r.stonesInTransit.ToString("# ##0");
+                panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = r.techProgress.ToString("# ##0");
+                
                 break;
             }
         }
@@ -108,7 +113,11 @@ namespace Assets.Scripts
             case People.Community.farm: newInfo = Instantiate(FarmInfoPanel); break;
             case People.Community.quarry: newInfo = Instantiate(QuarryInfoPanel); break;
             case People.Community.construction: newInfo = Instantiate(ConstructionInfoPanel); break;
-            case People.Community.transportRoad: newInfo = Instantiate(RoadInfoPanel); break;
+            case People.Community.transportRoad:
+                newInfo = Instantiate(RoadInfoPanel);
+                var b = newInfo.transform.Find("Teams").GetChild(0).GetComponent<Button>();
+                b.onClick.AddListener(() => ToggleRoadPanel());
+                break;
             case People.Community.transportRiver: newInfo = Instantiate(RiverInfoPanel); break;
             }
             newInfo.transform.SetParent(panel);
@@ -116,6 +125,11 @@ namespace Assets.Scripts
         public void RemovePanelInfo()
         {
             transform.Find("PanelCommunityInfo").gameObject.SetActive(false);
+        }
+
+        public void ToggleRoadPanel()
+        {
+            TeamOverview.SetActive(!TeamOverview.activeSelf);
         }
     }
 }

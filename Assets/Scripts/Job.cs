@@ -58,6 +58,7 @@ namespace Assets.Scripts
         int transportTime = 5;      // time to bring a stone to the docks
         public List<Team> teamsOnTheWay { get; private set; }
         public int peopleBusy { get { return teamsOnTheWay.Sum(t => t.people); } }
+        public int stonesInTransit { get { return teamsOnTheWay.Sum(t => t.stones); } }
 
         public Road() { teamsOnTheWay = new List<Team>(); }
         internal override void Tick()
