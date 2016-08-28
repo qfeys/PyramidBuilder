@@ -50,6 +50,12 @@ namespace Assets.Scripts
         {
             return (int)stock;
         }
+
+        internal bool TakeStones(int stones)
+        {
+            if(stock-stones >= 0) { stock -= stones;return true; }
+            return false;
+        }
     }
 
     class Road : Job
@@ -70,6 +76,7 @@ namespace Assets.Scripts
             if (stonesToBeMoved > 0)
             {
                 teamsOnTheWay.Add(new Team(stonesToBeMoved * teamsize, stonesToBeMoved, transportTime));
+                if (God.TheOne.quarry.TakeStones(stonesToBeMoved) == false) throw new Exception("Taking non-existing stones");
             }
             for (int i = teamsOnTheWay.Count - 1; i >= 0; i--)
             {
