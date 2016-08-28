@@ -19,6 +19,7 @@ namespace Assets.Scripts
 
         public GameObject TeamOverview;
         public GameObject BoatOverview;
+        public GameObject ChangeCrewPrompt;
 
         public void Awake() { if (TheOne == null) TheOne = this; }
         public void Start()
@@ -101,7 +102,7 @@ namespace Assets.Scripts
                 River ri = God.TheOne.river;
                 panel.GetChild(1).Find("Transit").GetChild(1).GetComponent<Text>().text = ri.stonesInTransit.ToString("# ##0");
                 panel.GetChild(1).Find("NumberOfBoats").GetChild(1).GetComponent<Text>().text = ri.boats.Count.ToString("# ##0");
-                panel.GetChild(1).Find("FreePeople").GetChild(1).GetComponent<Text>().text = (People.PeopleAt(People.Community.river) - ri.peopleBusy).ToString("# ##0");
+                panel.GetChild(1).Find("FreePeople").GetChild(1).GetComponent<Text>().text = ri.peopleFree.ToString("# ##0");
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = ri.techProgress.ToString("# ##0");
 
                 break;
@@ -150,7 +151,13 @@ namespace Assets.Scripts
 
         public void ToggleSetCrewForBoatPanel(River.Boat boat)
         {
-            throw new NotImplementedException();
+            Transform prompt = Instantiate(ChangeCrewPrompt).transform;
+            prompt.SetParent(transform.parent);
+            prompt.GetChild(1).GetChild(0).GetComponent<Text>().text = boat.name;
+            prompt.GetChild(1).GetChild(2).GetChild(0).GetComponent<Text>().text = boat.minCrew.ToString("# ##0");
+            prompt.GetChild(1).GetChild(2).GetChild(1).GetComponent<Text>().text = boat.maxCrew.ToString("# ##0");
+            prompt.GetChild(1).GetChild(3).GetComponent<Button>().onClick.AddListener(() => boat.Man(int.Parse(prompt.GetChild(1).GetChild(1).GetComponent<InputField>().text)));
+
         }
     }
 }

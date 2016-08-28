@@ -101,6 +101,7 @@ namespace Assets.Scripts
         public Priority priority = Priority.smallest;
 
         public float peopleBusy { get { return boats.Sum(b => b.crew); } }
+        public float peopleFree { get { return (People.PeopleAt(People.Community.river) - peopleBusy); } }
         public int stonesInTransit { get { return boats.Sum(t => t.stones); } }
 
         public River() { boats = new List<Boat>() { new Boat("Elise") }; }
@@ -173,10 +174,19 @@ namespace Assets.Scripts
                 return minTravelTime + (int)((float)maxTimeDiff / maxCrewDiff * crewDiff);
             }
 
-            public void Man(int extraCrew)
+            public void Man(int crew)
             {
-                crew += extraCrew;
-                if (crew > maxCrew) throw new ArgumentException("to many crew for this boat");
+                if(crew - this.crew> God.TheOne.river.peopleFree)
+                {
+                    God.TheOne.Console("There are only " + God.TheOne.river.peopleFree + " available to man the boats. Please make more people available");
+                    return;
+                }
+                this.crew = crew;
+                if (crew > maxCrew)
+                {
+                    God.TheOne.Console("" + crew + " is to many crew for the " + name + ". Assigned maximum of " + maxCrew + " instead.");
+                    crew = maxCrew;
+                }
             }
 
             public void Load(int stones)
