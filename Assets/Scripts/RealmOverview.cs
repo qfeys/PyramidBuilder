@@ -52,7 +52,6 @@ namespace Assets.Scripts
             {
                 transform.GetChild(i+1).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetComponent<Slider>().value = People.populationDistribution[comList[i]];
                 transform.GetChild(i+1).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetComponent<Text>().text = People.PeopleAt(comList[i]).ToString("# ##0");
-
             }
             isChanging = false;
         }
@@ -79,7 +78,6 @@ namespace Assets.Scripts
 
         internal void LockPopBar(People.Community com)
         {
-            Debug.Log("color: " + colorAlert.ToString());
             transform.Find(com.ToString()).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>().color = colorAlert;
         }
     }
