@@ -36,7 +36,7 @@ namespace Assets.Scripts
             if (f.stock < requestedFood) // To much food allocated, reduce allocations
             {
                 float reductionRatio = f.stock / requestedFood;
-                foreach (var com in communityList) { foodAllowance[com] *= reductionRatio; }
+                foreach (var com in communityList) { foodAllowance[com] *= reductionRatio; RealmOverview.TheOne.SetFoodSlider(com, foodAllowance[com]); }
                 requestedFood = communityList.Sum(c => populationDistribution[c] * foodAllowance[c]);
                 if (f.stock < requestedFood) throw new Exception("Bad recalculation of the food requests");
             }
@@ -97,7 +97,7 @@ namespace Assets.Scripts
             communityList.ForEach(c => populationDistribution[c] += equalShare);
             if (God.TheOne.road.peopleBusy > populationDistribution[Community.transportRoad] * totalPopulation)
             {
-                populationDistribution[Community.transportRoad] = God.TheOne.road.peopleBusy / totalPopulation;
+                populationDistribution[Community.transportRoad] = (float)God.TheOne.road.peopleBusy / totalPopulation;
                 RealmOverview.TheOne.LockPopBar(Community.transportRoad);
             }
             if (God.TheOne.river.peopleBusy > populationDistribution[Community.transportRiver] * totalPopulation)
