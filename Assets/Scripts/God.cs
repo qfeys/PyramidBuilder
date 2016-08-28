@@ -49,10 +49,10 @@ namespace Assets.Scripts
                 clock = 0;
                 time = time.AddDays(1);
                 farm.Tick();
-                quarry.Tick();
-                road.Tick();
-                river.Tick();
                 construction.Tick();
+                river.Tick();
+                road.Tick();
+                quarry.Tick();
                 military.Tick();
                 if (time.Day == 1)              // Monthly tick
                 {
