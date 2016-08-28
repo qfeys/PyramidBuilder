@@ -14,7 +14,9 @@ namespace Assets.Scripts
         Dictionary<int, float> deltaTime = new Dictionary<int, float>() { { 1, 1.0f }, { 2, 0.5f }, { 3, 0.25f }, { 4, 0.125f }, { 5, 0.0625f } };
         public bool isPaused;
 
-        public int pyramidTracker = 0;
+        public int pyramidTracker { get; private set; }
+        public GameObject pyramidProfab;
+        public List<Transform> pyramidPositions;
 
         internal readonly Farm farm = new Farm();
         internal readonly Quarry quarry = new Quarry();
@@ -95,6 +97,12 @@ namespace Assets.Scripts
                 Debug.Log("Bad report by: " + obj.GetType().ToString());
                 break;
             }
+        }
+
+        public void AddPyramid()
+        {
+            Instantiate(pyramidProfab, pyramidPositions[pyramidTracker].position, Quaternion.identity);
+            pyramidTracker++;
         }
 
         public void Console(string s)
