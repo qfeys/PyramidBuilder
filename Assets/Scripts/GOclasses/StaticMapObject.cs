@@ -18,9 +18,12 @@ namespace Assets.Scripts.GOclasses
 
         internal void SetNumberOfPersons(int n)
         {
-            var em = transform.GetChild(0).GetComponent<ParticleSystem>().emission;
-            em.rate = new ParticleSystem.MinMaxCurve(n / 60);
             numberOfpersons = n;
+            var em = transform.GetChild(0).GetComponent<ParticleSystem>().emission;
+            var rate = new ParticleSystem.MinMaxCurve();
+            rate.constantMin = n / 60f;
+            rate.constantMax = n / 60f;
+            em.rate = rate;
         }
 
         public void OnMouseUpAsButton()

@@ -60,13 +60,13 @@ namespace Assets.Scripts
 
     class Road : Job
     {
-        int teamsize = 10;
-        int transportTime = 14;      // time to bring a stone to the docks
+        public int teamsize { get; private set; }
+        public int transportTime { get; private set; }      // time to bring a stone to the docks
         public List<Team> teamsOnTheWay { get; private set; }
         public int peopleBusy { get { return teamsOnTheWay.Sum(t => t.people); } }
         public int stonesInTransit { get { return teamsOnTheWay.Sum(t => t.stones); } }
 
-        public Road() { teamsOnTheWay = new List<Team>(); }
+        public Road() { teamsOnTheWay = new List<Team>(); teamsize = 10; transportTime = 14; }
         internal override void Tick()
         {
             int availablePeople = People.PeopleAt(People.Community.road) - teamsOnTheWay.Sum(t => t.people);
@@ -75,7 +75,9 @@ namespace Assets.Scripts
             int stonesToBeMoved = Math.Min(availablePeople / teamsize, availableStones);
             if (stonesToBeMoved > 0)
             {
-                teamsOnTheWay.Add(new Team(stonesToBeMoved * teamsize, stonesToBeMoved, transportTime));
+                Team t = new Team(stonesToBeMoved * teamsize, stonesToBeMoved, transportTime);
+                teamsOnTheWay.Add(t);
+                God.TheOne.roadGO.launchTeam(t.id, t.people);
                 if (God.TheOne.quarry.TakeStones(stonesToBeMoved) == false) throw new Exception("Taking non-existing stones");
             }
             for (int i = teamsOnTheWay.Count - 1; i >= 0; i--)
@@ -93,10 +95,12 @@ namespace Assets.Scripts
 
         public class Team
         {
+            readonly public int id;
             readonly public int people;
             readonly public int stones;
             public int TimeLeft;
-            public Team(int people, int stones, int transportTime) { this.people = people; this.stones = stones; TimeLeft = transportTime; }
+            static int idcounter = 0;
+            public Team(int people, int stones, int transportTime) { this.people = people; this.stones = stones; TimeLeft = transportTime; id = idcounter; idcounter++; }
         }
     }
 

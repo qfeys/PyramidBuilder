@@ -23,11 +23,13 @@ namespace Assets.Scripts
         internal readonly Construction construction = new Construction();
         internal readonly Military military = new Military();
 
-        GOclasses.QuarryGO quarryGO;
-        GOclasses.FarmGO farmGO;
-        GOclasses.ConstructionGO constructionGO;
-        GOclasses.RoadGO roadGO;
-        GOclasses.RiverGO riverGO;
+        internal GOclasses.QuarryGO quarryGO;
+        internal GOclasses.FarmGO farmGO;
+        internal GOclasses.ConstructionGO constructionGO;
+        internal GOclasses.RoadGO roadGO;
+        internal GOclasses.RiverGO riverGO;
+
+        internal UnityEngine.Events.UnityAction AdditionalUpdates;
 
         static internal System.Random random = new System.Random();
 
@@ -61,6 +63,7 @@ namespace Assets.Scripts
                     People.Tick();
                     RealmOverview.TheOne.UpdateUnrest();
                 }
+                AdditionalUpdates();
             }
         }
 
@@ -70,18 +73,23 @@ namespace Assets.Scripts
             {
             case "Assets.Scripts.GOclasses.QuarryGO":
                 quarryGO = (GOclasses.QuarryGO)obj;
+                quarryGO.SetNumberOfPersons(120);
                 break;
             case "Assets.Scripts.GOclasses.FarmGO":
                 farmGO = (GOclasses.FarmGO)obj;
+                farmGO.SetNumberOfPersons(120);
                 break;
             case "Assets.Scripts.GOclasses.ConstructionGO":
                 constructionGO = (GOclasses.ConstructionGO)obj;
+                constructionGO.SetNumberOfPersons(120);
                 break;
             case "Assets.Scripts.GOclasses.RoadGO":
                 roadGO = (GOclasses.RoadGO)obj;
+                roadGO.SetNumberOfPersons(120);
                 break;
             case "Assets.Scripts.GOclasses.RiverGO":
                 riverGO = (GOclasses.RiverGO)obj;
+                riverGO.SetNumberOfPersons(120);
                 break;
             default:
                 Debug.Log("Bad report by: " + obj.GetType().ToString());
