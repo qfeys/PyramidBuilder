@@ -36,7 +36,7 @@ namespace Assets.Scripts.GOclasses
 
         public void SetNumberOfPersons(int n)
         {
-            if (teams.Count == 0) passivePersons = n;
+            if (teams == null || teams.Count == 0) passivePersons = n;
             else passivePersons = n - teams.Sum(t => t.persons);
             if (passivePersons < 0) throw new ArgumentException("invalid number of persons. They are working on the road.");
             var em = transform.GetChild(0).GetComponent<ParticleSystem>().emission;

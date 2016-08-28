@@ -13,7 +13,9 @@ namespace Assets.Scripts.GOclasses
             {
                 Team tgo = teams[i];
                 var team = God.TheOne.road.teamsOnTheWay.Find(t => t.id == tgo.id);
-                if (team == null) teams.RemoveAt(i);
+                if (team == null) {
+                    Destroy(teams[i].core);
+                    teams.RemoveAt(i); }
                 else
                 {
                     tgo.SetPRogress(1 - (float)team.TimeLeft / God.TheOne.road.transportTime);
