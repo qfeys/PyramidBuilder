@@ -66,6 +66,7 @@ namespace Assets.Scripts
                     RealmOverview.TheOne.UpdateUnrest();
                 }
                 AdditionalUpdates();
+                AddPyramid();
             }
         }
 
@@ -101,7 +102,7 @@ namespace Assets.Scripts
 
         public void AddPyramid()
         {
-            Instantiate(pyramidProfab, pyramidPositions[pyramidTracker].position, Quaternion.identity);
+            Instantiate(pyramidProfab).transform.position = new Vector3(pyramidPositions[pyramidTracker].position.x, -3, pyramidPositions[pyramidTracker].position.z);
             pyramidTracker++;
         }
 

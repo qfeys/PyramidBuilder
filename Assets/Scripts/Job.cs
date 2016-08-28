@@ -243,7 +243,7 @@ namespace Assets.Scripts
             progress += workOnPyramid;
             if (progress >= pyramidLevels[God.TheOne.pyramidTracker])
             {
-                God.TheOne.pyramidTracker++;
+                God.TheOne.AddPyramid();
                 progress = 0;
             }
             //if (totalWork > 0) God.TheOne.Console("" + totalWork.ToString("n2") + " tasks worth of work is being wasted by your construction crew.");
