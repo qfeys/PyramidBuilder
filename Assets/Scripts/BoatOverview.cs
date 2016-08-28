@@ -21,10 +21,17 @@ namespace Assets.Scripts
             transform.position += (Vector3)eventData.delta;
         }
 
+        public void Start()
+        {
+            Action buildNewBoat = () => God.TheOne.river.boats.Add(new River.Boat("Sarah"));
+            transform.Find("BuildNew").GetComponent<Button>().onClick.AddListener(()=>Outliner.TheOne.ToggleConstructionPanel("Boat", 50, buildNewBoat));
+            // God.TheOne.river.boats.Add(new River.Boat("Sarah"))
+        }
+
         public void Update()
         {
             List<River.Boat> boats = God.TheOne.river.boats;
-            foreach(var boat in boats)
+            foreach (var boat in boats)
             {
                 if (boatPanels.ContainsValue(boat) == false)
                 {
@@ -42,11 +49,11 @@ namespace Assets.Scripts
                 }
             }
 
-            foreach(var panel in boatPanels)
+            foreach (var panel in boatPanels)
             {
                 panel.Key.GetChild(1).GetComponent<Text>().text = panel.Value.crew.ToString("# ##0");
                 panel.Key.GetChild(1).GetComponent<Text>().color = panel.Value.IsActive ? colorNorm : colorAlert;
-                panel.Key.GetChild(3).GetComponent<Button>().interactable = panel.Value.isInDock; 
+                panel.Key.GetChild(3).GetComponent<Button>().interactable = panel.Value.isInDock;
                 panel.Key.GetChild(4).GetChild(0).GetComponent<Text>().text = panel.Value.stones.ToString("# ##0");
                 panel.Key.GetChild(5).GetComponent<Text>().text = panel.Value.timeTillArrival.ToString("# ##0");
                 panel.Key.GetChild(7).GetComponent<Toggle>().isOn = panel.Value.isInDock;

@@ -20,6 +20,7 @@ namespace Assets.Scripts
         public GameObject TeamOverview;
         public GameObject BoatOverview;
         public GameObject ChangeCrewPrompt;
+        public GameObject ConstructionPrompt;
 
         public void Awake() { if (TheOne == null) TheOne = this; }
         public void Start()
@@ -163,6 +164,23 @@ namespace Assets.Scripts
             prompt.GetChild(1).GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
             {
                 boat.Man(int.Parse(prompt.GetChild(1).GetChild(1).GetComponent<InputField>().text));
+                Destroy(prompt.gameObject);
+            });
+            prompt.GetChild(2).GetComponent<Button>().onClick.AddListener(() => Destroy(prompt.gameObject));
+
+        }
+
+        public void ToggleConstructionPanel(string name, float work, Action onCompletion)
+        {
+            Transform prompt = Instantiate(ConstructionPrompt).transform;
+            prompt.SetParent(transform.parent);
+            prompt.position = new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2);
+            prompt.GetChild(1).GetChild(0).GetComponent<Text>().text = name;
+            prompt.GetChild(1).GetChild(1).GetComponent<Text>().text = work.ToString("# ##0");
+            prompt.GetChild(2).GetChild(0).GetComponent<Button>().onClick.AddListener(() => Destroy(prompt.gameObject));
+            prompt.GetChild(2).GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                God.TheOne.construction.AddTask(name, work, onCompletion);
                 Destroy(prompt.gameObject);
             });
 

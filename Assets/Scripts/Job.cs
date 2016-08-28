@@ -39,7 +39,7 @@ namespace Assets.Scripts
     class Quarry : Job
     {
         public float stock { get; private set; }
-        float efficiency = 0.05f;   // you need 20 people to make 1 stone
+        float efficiency = 0.005f;   // you need 200 people to make 1 stone
         public float production { get { return People.PeopleAt(People.Community.quarry) * efficiency * People.Productivity(People.Community.quarry); } }
         internal override void Tick()
         {
@@ -55,7 +55,7 @@ namespace Assets.Scripts
     class Road : Job
     {
         int teamsize = 10;
-        int transportTime = 5;      // time to bring a stone to the docks
+        int transportTime = 14;      // time to bring a stone to the docks
         public List<Team> teamsOnTheWay { get; private set; }
         public int peopleBusy { get { return teamsOnTheWay.Sum(t => t.people); } }
         public int stonesInTransit { get { return teamsOnTheWay.Sum(t => t.stones); } }
@@ -110,7 +110,7 @@ namespace Assets.Scripts
             boats.ForEach(b => b.Tick());
             while (dockStock > 0)
             {
-                Boat next = boats.FindAll(b => b.isInDock && b.IsActive).
+                Boat next = boats.FindAll(b => b.isInDock && b.IsActive && b.mayLeave).
                     OrderBy(b => { switch (priority) { case Priority.smallest: return b.capacity; case Priority.fastest: return b.GetTimeRequired(); } throw new Exception("invalid priority"); }).
                     FirstOrDefault();
                 if (next != null && dockStock > next.capacity)
@@ -139,9 +139,9 @@ namespace Assets.Scripts
             public bool IsActive { get { return crew >= minCrew; } }
             public bool mayLeave = true;
 
-            public Boat(string name, int capacity = 5, int minCrew = 10, int maxCrew = 10, int minSpeed = 5, int maxSpeed = 5)
+            public Boat(string name, int capacity = 25, int minCrew = 30, int maxCrew = 40, int minSpeed = 10, int maxSpeed = 15)
             {
-                this.name = name; this.capacity = capacity; this.minCrew = minCrew; this.maxCrew = maxCrew; this.minTravelTime = minSpeed; this.maxTravelTime = maxSpeed;
+                this.name = name; this.capacity = capacity; this.minCrew = minCrew; this.maxCrew = maxCrew; this.minTravelTime = minSpeed; maxTravelTime = maxSpeed;
                 crew = 0; stones = 0; timeTillArrival = 0; isInDock = true;
             }
 
@@ -241,6 +241,7 @@ namespace Assets.Scripts
             public float work;
             public Action onCompletion { get; private set; }
             public Task(string name, float work, Action onCompletion) { this.name = name; this.work = work; this.onCompletion = onCompletion; }
+            
         }
     }
 
