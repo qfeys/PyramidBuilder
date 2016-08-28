@@ -29,6 +29,7 @@ namespace Assets.Scripts
             transform.Find("PanelPopulation").GetChild(1).GetComponent<Text>().text = People.totalPopulation.ToString("# ##0");
             transform.Find("PanelFood").GetChild(1).GetComponent<Text>().text = God.TheOne.farm.stock.ToString("# ##0");
             transform.Find("PanelFood").GetChild(3).GetComponent<Text>().text = God.TheOne.farm.storageCapacity.ToString("# ##0");
+            UpdateInfoPanel();
         }
 
         public void TimeUp()
@@ -51,6 +52,15 @@ namespace Assets.Scripts
         public void ToggleRealmOverview()
         {
             RealmOverview.TheOne.gameObject.SetActive(!RealmOverview.TheOne.gameObject.activeSelf);
+        }
+
+        private void UpdateInfoPanel()
+        {
+            Transform panel = transform.Find("PanelCommunityInfo");
+            if (panel.gameObject.activeSelf == false) return;
+            panel.GetChild(1).GetChild(1).GetComponent<Text>().text = People.PeopleAt(currentPanelInfo).ToString("# ##0");
+            panel.GetChild(2).GetChild(1).GetComponent<Text>().text = Mathf.Clamp01(People.unrest[currentPanelInfo]).ToString("##0%");
+            panel.GetChild(3).GetChild(1).GetComponent<Text>().text = (People.PeopleAt(currentPanelInfo) * People.foodAllowance[currentPanelInfo]).ToString("# ##0");
         }
 
         People.Community currentPanelInfo;

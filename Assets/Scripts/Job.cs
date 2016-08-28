@@ -7,7 +7,7 @@ namespace Assets.Scripts
 {
     abstract class Job
     {
-        protected float techProgress;
+        public float techProgress = 0;
 
         abstract internal void Tick();
     }
