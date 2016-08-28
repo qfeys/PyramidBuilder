@@ -46,6 +46,7 @@ namespace Assets.Scripts
             {
                 panel.Key.GetChild(1).GetComponent<Text>().text = panel.Value.crew.ToString("# ##0");
                 panel.Key.GetChild(1).GetComponent<Text>().color = panel.Value.IsActive ? colorNorm : colorAlert;
+                panel.Key.GetChild(3).GetComponent<Button>().interactable = panel.Value.isInDock; 
                 panel.Key.GetChild(4).GetChild(0).GetComponent<Text>().text = panel.Value.stones.ToString("# ##0");
                 panel.Key.GetChild(5).GetComponent<Text>().text = panel.Value.timeTillArrival.ToString("# ##0");
                 panel.Key.GetChild(7).GetComponent<Toggle>().isOn = panel.Value.isInDock;

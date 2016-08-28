@@ -95,7 +95,7 @@ namespace Assets.Scripts
 
     class River : Job
     {
-        int dockStock;
+        public int dockStock { get; private set; }
         public List<Boat> boats { get; private set; }
         public enum Priority { smallest, fastest};
         public Priority priority = Priority.smallest;
@@ -107,6 +107,7 @@ namespace Assets.Scripts
         public River() { boats = new List<Boat>() { new Boat("Elise") }; }
         internal override void Tick()
         {
+            boats.ForEach(b => b.Tick());
             while (dockStock > 0)
             {
                 Boat next = boats.FindAll(b => b.isInDock && b.IsActive).
@@ -119,7 +120,6 @@ namespace Assets.Scripts
                 }
                 else break;
             }
-            boats.ForEach(b => b.Tick());
         }
 
         internal void newStonesArrive(int stones) { dockStock += stones; }
@@ -142,26 +142,28 @@ namespace Assets.Scripts
             public Boat(string name, int capacity = 5, int minCrew = 10, int maxCrew = 10, int minSpeed = 5, int maxSpeed = 5)
             {
                 this.name = name; this.capacity = capacity; this.minCrew = minCrew; this.maxCrew = maxCrew; this.minTravelTime = minSpeed; this.maxTravelTime = maxSpeed;
-                crew = 0; stones = 0; timeTillArrival = 0;
+                crew = 0; stones = 0; timeTillArrival = 0; isInDock = true;
             }
 
             public void Tick()
             {
                 if (IsActive)
                 {
-                    if (timeTillArrival > 0)
+                    if (timeTillArrival == 0)    // Boat just arrived
+                    {
+                        if (stones > 0)
+                        {
+                            God.TheOne.construction.stock += stones;
+                            timeTillArrival = GetTimeRequired();
+                            stones = 0;
+                        }
+                        else { isInDock = true; }
+                    }
+                    else if (timeTillArrival > 0)
                     {
                         if (God.random.NextDouble() < People.Productivity(People.Community.river))
                             timeTillArrival--;      // Sometimes they will not move if productivity is to low
-                        if(timeTillArrival == 0)    // Boat just arrived
-                        {
-                            if(stones> 0)
-                            {
-                                God.TheOne.construction.stock += stones;
-                                timeTillArrival = GetTimeRequired();
-                            }
-                            else { isInDock = true; }
-                        }
+                        
                     }
                 }
             }
@@ -169,8 +171,9 @@ namespace Assets.Scripts
             public int GetTimeRequired()
             {
                 int maxCrewDiff = maxCrew - minCrew;
-                int maxTimeDiff = maxTravelTime - minTravelTime;
+                int maxTimeDiff = minTravelTime - maxTravelTime;
                 int crewDiff = crew - minCrew;
+                if (crewDiff == 0) return maxTravelTime;
                 return minTravelTime + (int)((float)maxTimeDiff / maxCrewDiff * crewDiff);
             }
 
@@ -193,7 +196,8 @@ namespace Assets.Scripts
             {
                 if (this.stones != 0) throw new Exception("Trying to load an already filled boat");
                 this.stones = stones;
-                timeTillArrival = GetTimeRequired() + 1;        // One tick for loading
+                timeTillArrival = GetTimeRequired();
+                isInDock = false;
             }
         }
     }
@@ -204,8 +208,8 @@ namespace Assets.Scripts
         float constructionSpeed = 0.05f;   // you need 20 people to place 1 stone
         public float workSpeed { get { return People.PeopleAt(People.Community.construction) * constructionSpeed * People.Productivity(People.Community.construction); } }
         public Queue<Task> tasks { get; private set; }
-        float progress = 0;
-        public Construction() { tasks = new Queue<Task>(); }
+        public float progress { get; private set; }
+        public Construction() { tasks = new Queue<Task>(); progress = 0; }
         internal override void Tick()
         {
             float totalWork = People.PeopleAt(People.Community.construction) * constructionSpeed;

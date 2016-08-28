@@ -85,6 +85,7 @@ namespace Assets.Scripts
                 Construction c = God.TheOne.construction;
                 panel.GetChild(1).Find("Production").GetChild(1).GetComponent<Text>().text = c.workSpeed.ToString("# ##0");
                 panel.GetChild(1).Find("Stock").GetChild(1).GetComponent<Text>().text = c.stock.ToString("# ##0");
+                panel.GetChild(1).Find("Progress").GetChild(1).GetComponent<Text>().text = c.progress.ToString("# ##0");
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = c.techProgress.ToString("# ##0");
                 string taskNames = ""; string taskWork = "";
                 foreach (var task in c.tasks) { taskNames += task.name + "\n"; taskWork += task.work.ToString("# ##0") + "\n"; }
@@ -100,6 +101,7 @@ namespace Assets.Scripts
                 break;
             case People.Community.river:
                 River ri = God.TheOne.river;
+                panel.GetChild(1).Find("Docks").GetChild(1).GetComponent<Text>().text = ri.dockStock.ToString("# ##0");
                 panel.GetChild(1).Find("Transit").GetChild(1).GetComponent<Text>().text = ri.stonesInTransit.ToString("# ##0");
                 panel.GetChild(1).Find("NumberOfBoats").GetChild(1).GetComponent<Text>().text = ri.boats.Count.ToString("# ##0");
                 panel.GetChild(1).Find("FreePeople").GetChild(1).GetComponent<Text>().text = ri.peopleFree.ToString("# ##0");
@@ -153,10 +155,16 @@ namespace Assets.Scripts
         {
             Transform prompt = Instantiate(ChangeCrewPrompt).transform;
             prompt.SetParent(transform.parent);
+            prompt.position = new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2);
             prompt.GetChild(1).GetChild(0).GetComponent<Text>().text = boat.name;
+            prompt.GetChild(1).GetChild(1).GetComponent<InputField>().Select();
             prompt.GetChild(1).GetChild(2).GetChild(0).GetComponent<Text>().text = boat.minCrew.ToString("# ##0");
             prompt.GetChild(1).GetChild(2).GetChild(1).GetComponent<Text>().text = boat.maxCrew.ToString("# ##0");
-            prompt.GetChild(1).GetChild(3).GetComponent<Button>().onClick.AddListener(() => boat.Man(int.Parse(prompt.GetChild(1).GetChild(1).GetComponent<InputField>().text)));
+            prompt.GetChild(1).GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                boat.Man(int.Parse(prompt.GetChild(1).GetChild(1).GetComponent<InputField>().text));
+                Destroy(prompt.gameObject);
+            });
 
         }
     }
