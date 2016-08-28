@@ -14,6 +14,7 @@ namespace Assets.Scripts.GOclasses
         float totalLength;
         int passivePersons;
         Dictionary<int, float> distances;
+        protected virtual People.Community ownCommunity { get { throw new Exception("Consider this class abstract"); } }
 
         public void Start()
         {
@@ -57,6 +58,11 @@ namespace Assets.Scripts.GOclasses
             }
             float fractionOfLastLeg = distanceTraveled / distances[i];
             return route[i].position + (route[i + 1].position - route[i].position) * fractionOfLastLeg;
+        }
+
+        public void OnMouseUpAsButton()
+        {
+            Outliner.TheOne.setPanelInfo(ownCommunity);
         }
 
 

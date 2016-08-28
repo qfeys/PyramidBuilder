@@ -5,6 +5,6 @@ namespace Assets.Scripts.GOclasses
 {
     public class RoadGO : DynamicMapObject
     {
-
+        protected override People.Community ownCommunity { get { return People.Community.construction; } }
     }
 }

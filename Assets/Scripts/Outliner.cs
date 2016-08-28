@@ -11,6 +11,12 @@ namespace Assets.Scripts
     {
         static public Outliner TheOne;
 
+        public GameObject FarmInfoPanel;
+        public GameObject QuarryInfoPanel;
+        public GameObject ConstructionInfoPanel;
+        public GameObject RoadInfoPanel;
+        public GameObject RiverInfoPanel;
+
         public void Awake() { if (TheOne == null) TheOne = this; }
         public void Start()
         {
@@ -44,6 +50,26 @@ namespace Assets.Scripts
         public void ToggleRealmOverview()
         {
             RealmOverview.TheOne.gameObject.SetActive(!RealmOverview.TheOne.gameObject.activeSelf);
+        }
+
+        People.Community currentPanelInfo;
+        public void setPanelInfo(People.Community com)
+        {
+            Transform panel = transform.Find("PanelCommunityInfo");
+            panel.gameObject.SetActive(true);
+            if (currentPanelInfo == com) return;
+            currentPanelInfo = com;
+            if (panel.childCount != 0) Destroy(panel.GetChild(0).gameObject);
+            GameObject newInfo = null;
+            switch (com)
+            {
+            case People.Community.farm: newInfo = Instantiate(FarmInfoPanel); break;
+            case People.Community.quarry: newInfo = Instantiate(QuarryInfoPanel); break;
+            case People.Community.construction: newInfo = Instantiate(ConstructionInfoPanel); break;
+            case People.Community.transportRoad: newInfo = Instantiate(RoadInfoPanel); break;
+            case People.Community.transportRiver: newInfo = Instantiate(RiverInfoPanel); break;
+            }
+            newInfo.transform.SetParent(panel);
         }
     }
 }
