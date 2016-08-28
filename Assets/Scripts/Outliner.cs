@@ -20,6 +20,7 @@ namespace Assets.Scripts
         public void Awake() { if (TheOne == null) TheOne = this; }
         public void Start()
         {
+            RemovePanelInfo();
         }
 
         public void Update()
@@ -59,7 +60,7 @@ namespace Assets.Scripts
             panel.gameObject.SetActive(true);
             if (currentPanelInfo == com) return;
             currentPanelInfo = com;
-            if (panel.childCount != 0) Destroy(panel.GetChild(0).gameObject);
+            if (panel.childCount == 2) Destroy(panel.GetChild(1).gameObject);
             GameObject newInfo = null;
             switch (com)
             {
@@ -70,6 +71,10 @@ namespace Assets.Scripts
             case People.Community.transportRiver: newInfo = Instantiate(RiverInfoPanel); break;
             }
             newInfo.transform.SetParent(panel);
+        }
+        public void RemovePanelInfo()
+        {
+            transform.Find("PanelCommunityInfo").gameObject.SetActive(false);
         }
     }
 }

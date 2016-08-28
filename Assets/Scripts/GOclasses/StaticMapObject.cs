@@ -25,7 +25,6 @@ namespace Assets.Scripts.GOclasses
 
         public void OnMouseUpAsButton()
         {
-            Debug.Log("Mouse Clicked" + ownCommunity);
             Outliner.TheOne.setPanelInfo(ownCommunity);
         }
     }
