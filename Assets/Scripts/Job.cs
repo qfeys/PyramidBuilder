@@ -56,9 +56,10 @@ namespace Assets.Scripts
     {
         int teamsize = 10;
         int transportTime = 5;      // time to bring a stone to the docks
-        List<Team> teamsOnTheWay = new List<Team>();
+        public List<Team> teamsOnTheWay { get; private set; }
         public int peopleBusy { get { return teamsOnTheWay.Sum(t => t.people); } }
 
+        public Road() { teamsOnTheWay = new List<Team>(); }
         internal override void Tick()
         {
             int availablePeople = People.PeopleAt(People.Community.transportRoad) - teamsOnTheWay.Sum(t => t.people);
@@ -67,13 +68,13 @@ namespace Assets.Scripts
             int stonesToBeMoved = Math.Min(availablePeople / teamsize, availableStones);
             if (stonesToBeMoved > 0)
             {
-                teamsOnTheWay.Add(new Team(stonesToBeMoved * teamsize, stonesToBeMoved));
+                teamsOnTheWay.Add(new Team(stonesToBeMoved * teamsize, stonesToBeMoved, transportTime));
             }
             for (int i = teamsOnTheWay.Count - 1; i >= 0; i--)
             {
                 if(God.random.NextDouble()<People.Productivity(People.Community.transportRoad))
-                    teamsOnTheWay[i].Time++;        // If the productivity is to low, somtimes they will not move.
-                if(teamsOnTheWay[i].Time > transportTime)
+                    teamsOnTheWay[i].TimeLeft--;        // If the productivity is to low, somtimes they will not move.
+                if(teamsOnTheWay[i].TimeLeft <= 0)
                 {
                     God.TheOne.river.newStonesArrive(teamsOnTheWay[i].stones);
                     teamsOnTheWay.RemoveAt(i);
@@ -82,12 +83,12 @@ namespace Assets.Scripts
 
         }
 
-        class Team
+        public class Team
         {
             readonly public int people;
             readonly public int stones;
-            public int Time;
-            public Team(int people, int stones) { this.people = people; this.stones = stones; Time = 0; }
+            public int TimeLeft;
+            public Team(int people, int stones, int transportTime) { this.people = people; this.stones = stones; TimeLeft = 0; }
         }
     }
 
