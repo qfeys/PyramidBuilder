@@ -30,6 +30,7 @@ namespace Assets.Scripts
         internal GOclasses.ConstructionGO constructionGO;
         internal GOclasses.RoadGO roadGO;
         internal GOclasses.RiverGO riverGO;
+        internal GOclasses.MilitaryGO militaryGO;
 
         internal UnityEngine.Events.UnityAction AdditionalUpdates;
 
@@ -94,6 +95,10 @@ namespace Assets.Scripts
             case "Assets.Scripts.GOclasses.RiverGO":
                 riverGO = (GOclasses.RiverGO)obj;
                 riverGO.SetNumberOfPersons(120);
+                break;
+            case "Assets.Scripts.GOclasses.MilitaryGO":
+                militaryGO = (GOclasses.MilitaryGO)obj;
+                militaryGO.SetNumberOfPersons(120);
                 break;
             default:
                 Debug.Log("Bad report by: " + obj.GetType().ToString());

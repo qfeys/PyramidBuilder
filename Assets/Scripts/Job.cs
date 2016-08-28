@@ -25,6 +25,7 @@ namespace Assets.Scripts
         internal override void Tick()
         {
             techProgress += 1 + People.PeopleAt(People.Community.farm) / 100;
+            if (techProgress > 1000) techProgress = 1000;
             stock += production;
             if (stock > storageCapacity)
             {
@@ -42,6 +43,7 @@ namespace Assets.Scripts
         {
             efficiency *= 1.5f;
             storageCapacity *= 1.5f;
+            techProgress -= 1000;
         }
     }
 
@@ -53,6 +55,7 @@ namespace Assets.Scripts
         internal override void Tick()
         {
             techProgress += 1 + People.PeopleAt(People.Community.quarry) / 100;
+            if (techProgress > 1000) techProgress = 1000;
             stock += production;
         }
 
@@ -70,6 +73,7 @@ namespace Assets.Scripts
         internal override void Upgrade()
         {
             efficiency *= 1.5f;
+            techProgress -= 1000;
         }
     }
 
@@ -85,6 +89,7 @@ namespace Assets.Scripts
         internal override void Tick()
         {
             techProgress += 1 + People.PeopleAt(People.Community.road) / 100;
+            if (techProgress > 1000) techProgress = 1000;
             int availablePeople = People.PeopleAt(People.Community.road) - teamsOnTheWay.Sum(t => t.people);
             if (availablePeople < 0) God.TheOne.Console("Road has negative people!");
             int availableStones = God.TheOne.quarry.HasStones();
@@ -113,6 +118,7 @@ namespace Assets.Scripts
         {
             teamsize--;
             transportTime--;
+            techProgress -= 1000;
         }
 
         public class Team
@@ -141,6 +147,7 @@ namespace Assets.Scripts
         internal override void Tick()
         {
             techProgress += 1 + People.PeopleAt(People.Community.river) / 100;
+            if (techProgress > 1000) techProgress = 1000;
             boats.ForEach(b => b.Tick());
             while (dockStock > 0)
             {
@@ -183,6 +190,7 @@ namespace Assets.Scripts
             minCrew += 5;
             minTravelTime += 0;
             maxTravelTime += 2;
+            techProgress -= 1000;
         }
 
         public class Boat
@@ -277,6 +285,7 @@ namespace Assets.Scripts
         internal override void Tick()
         {
             techProgress += 1 + People.PeopleAt(People.Community.construction) / 100;
+            if (techProgress > 1000) techProgress = 1000;
             float totalWork = People.PeopleAt(People.Community.construction) * constructionSpeed;
             while (totalWork > 0 && tasks.Count != 0)
             {
@@ -308,6 +317,7 @@ namespace Assets.Scripts
         internal override void Upgrade()
         {
             constructionSpeed *= 1.5f;
+            techProgress -= 1000;
         }
 
         public class Task
@@ -326,15 +336,18 @@ namespace Assets.Scripts
     {
         float suppressionEfficiancy = 1.0f;
         public float totalSuppression { get { return People.PeopleAt(People.Community.military) * suppressionEfficiancy * People.Productivity(People.Community.military); } }
+        public float averageSupression { get { return totalSuppression / People.totalPopulation; } }
         internal override void Tick()
         {
             techProgress += 1 + People.PeopleAt(People.Community.military) / 100;
+            if (techProgress > 1000) techProgress = 1000;
             // Do nthing, I guess
         }
 
         internal override void Upgrade()
         {
             suppressionEfficiancy *= 1.5f;
+            techProgress -= 1000;
         }
     }
 }

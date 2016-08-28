@@ -35,8 +35,9 @@ namespace Assets.Scripts
                 panel.name = com.ToString();
                 panel.GetChild(0).GetChild(0).GetComponent<Text>().text = com.ToString();
                 panel.GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetComponent<Text>().text = People.PeopleAt(com).ToString("# ##0");
-                panel.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetComponent<Slider>().onValueChanged.AddListener((v) => TrySetPopulation(com, v));
-                panel.GetChild(1).GetChild(0).GetChild(1).GetChild(0).GetComponent<Slider>().onValueChanged.AddListener((v) => TrySetFood(com, v));
+                var c = com;    // Dont remove, used for actions
+                panel.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetComponent<Slider>().onValueChanged.AddListener((v) => TrySetPopulation(c, v));
+                panel.GetChild(1).GetChild(0).GetChild(1).GetChild(0).GetComponent<Slider>().onValueChanged.AddListener((v) => TrySetFood(c, v));
             }
         }
 

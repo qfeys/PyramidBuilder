@@ -16,6 +16,7 @@ namespace Assets.Scripts
         public GameObject ConstructionInfoPanel;
         public GameObject RoadInfoPanel;
         public GameObject RiverInfoPanel;
+        public GameObject MilitaryInfoPanel;
 
         public GameObject TeamOverview;
         public GameObject BoatOverview;
@@ -30,7 +31,7 @@ namespace Assets.Scripts
 
         public void Update()
         {
-            transform.Find("PanelTime").GetChild(1).GetComponent<Text>().text = God.TheOne.time.ToString("MM-dd");
+            transform.Find("PanelTime").GetChild(1).GetComponent<Text>().text = God.TheOne.time.ToString("yy-MM-dd");
             transform.Find("PanelPopulation").GetChild(1).GetComponent<Text>().text = People.totalPopulation.ToString("# ##0");
             transform.Find("PanelFood").GetChild(1).GetComponent<Text>().text = God.TheOne.farm.stock.ToString("# ##0");
             transform.Find("PanelFood").GetChild(3).GetComponent<Text>().text = God.TheOne.farm.storageCapacity.ToString("# ##0");
@@ -116,6 +117,12 @@ namespace Assets.Scripts
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = ri.techProgress.ToString("# ##0");
                 panel.GetChild(2).GetComponent<Button>().interactable = ri.techProgress >= 1000;
                 break;
+            case People.Community.military:
+                Military m = God.TheOne.military;
+                panel.GetChild(1).Find("Supression").GetChild(1).GetComponent<Text>().text = m.averageSupression.ToString("#0%");
+                panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = m.techProgress.ToString("# ##0");
+                panel.GetChild(2).GetComponent<Button>().interactable = m.techProgress >= 1000;
+                break;
             }
         }
 
@@ -126,7 +133,7 @@ namespace Assets.Scripts
             panel.gameObject.SetActive(true);
             if (currentPanelInfo == com) return;
             currentPanelInfo = com;
-            if (panel.childCount == 2) Destroy(panel.GetChild(1).gameObject);
+            if (panel.childCount == 3) Destroy(panel.GetChild(1).gameObject);
             GameObject newInfo = null;
             switch (com)
             {
@@ -141,8 +148,10 @@ namespace Assets.Scripts
                 newInfo = Instantiate(RiverInfoPanel);
                 newInfo.transform.Find("Boats").GetChild(0).GetComponent<Button>().onClick.AddListener(() => ToggleRiverPanel());
                 break;
+            case People.Community.military: newInfo = Instantiate(MilitaryInfoPanel); break;
             }
             newInfo.transform.SetParent(panel);
+            newInfo.transform.SetSiblingIndex(1);
         }
         public void RemovePanelInfo()
         {
@@ -151,14 +160,17 @@ namespace Assets.Scripts
 
         public void UpgradeActiveCom()
         {
+            Job j = null;
             switch (currentPanelInfo)
             {
-            case People.Community.farm: God.TheOne.farm.Upgrade(); break;
-            case People.Community.quarry: God.TheOne.quarry.Upgrade(); break;
-            case People.Community.construction: God.TheOne.construction.Upgrade(); break;
-            case People.Community.road: God.TheOne.road.Upgrade(); break;
-            case People.Community.river: God.TheOne.river.Upgrade(); break;
+            case People.Community.farm: j = God.TheOne.farm; break;
+            case People.Community.quarry: j = God.TheOne.quarry; break;
+            case People.Community.construction: j = God.TheOne.construction; break;
+            case People.Community.road: j = God.TheOne.road; break;
+            case People.Community.river: j = God.TheOne.river; break;
+            case People.Community.military: j = God.TheOne.military; break;
             }
+            ToggleConstructionPanel("Upgrade " + currentPanelInfo.ToString(), 40, () => j.Upgrade());
         }
 
         public void ToggleRoadPanel()
