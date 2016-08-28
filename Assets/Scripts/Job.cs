@@ -10,6 +10,8 @@ namespace Assets.Scripts
         public float techProgress = 0;
 
         abstract internal void Tick();
+
+        abstract internal void Upgrade();
     }
 
     class Farm : Job
@@ -22,6 +24,7 @@ namespace Assets.Scripts
         public Farm() { storageCapacity = 50000; }
         internal override void Tick()
         {
+            techProgress += 1 + People.PeopleAt(People.Community.farm);
             stock += production;
             if (stock > storageCapacity)
             {
@@ -34,6 +37,12 @@ namespace Assets.Scripts
         {
             stock -= requestedFood;
         }
+
+        internal override void Upgrade()
+        {
+            efficiency *= 1.5f;
+            storageCapacity *= 1.5f;
+        }
     }
 
     class Quarry : Job
@@ -43,6 +52,7 @@ namespace Assets.Scripts
         public float production { get { return People.PeopleAt(People.Community.quarry) * efficiency * People.Productivity(People.Community.quarry); } }
         internal override void Tick()
         {
+            techProgress += 1 + People.PeopleAt(People.Community.quarry);
             stock += production;
         }
 
@@ -56,6 +66,11 @@ namespace Assets.Scripts
             if(stock-stones >= 0) { stock -= stones;return true; }
             return false;
         }
+
+        internal override void Upgrade()
+        {
+            efficiency *= 1.5f;
+        }
     }
 
     class Road : Job
@@ -66,9 +81,10 @@ namespace Assets.Scripts
         public int peopleBusy { get { return teamsOnTheWay.Sum(t => t.people); } }
         public int stonesInTransit { get { return teamsOnTheWay.Sum(t => t.stones); } }
 
-        public Road() { teamsOnTheWay = new List<Team>(); teamsize = 10; transportTime = 14; }
+        public Road() { teamsOnTheWay = new List<Team>(); teamsize = 15; transportTime = 14; }
         internal override void Tick()
         {
+            techProgress += 1 + People.PeopleAt(People.Community.road);
             int availablePeople = People.PeopleAt(People.Community.road) - teamsOnTheWay.Sum(t => t.people);
             if (availablePeople < 0) God.TheOne.Console("Road has negative people!");
             int availableStones = God.TheOne.quarry.HasStones();
@@ -91,6 +107,12 @@ namespace Assets.Scripts
                 }
             }
 
+        }
+
+        internal override void Upgrade()
+        {
+            teamsize--;
+            transportTime--;
         }
 
         public class Team
@@ -118,6 +140,7 @@ namespace Assets.Scripts
         public River() { boats = new List<Boat>(); }
         internal override void Tick()
         {
+            techProgress += 1 + People.PeopleAt(People.Community.river);
             boats.ForEach(b => b.Tick());
             while (dockStock > 0)
             {
@@ -134,6 +157,12 @@ namespace Assets.Scripts
         }
 
         internal void newStonesArrive(int stones) { dockStock += stones; }
+
+
+        internal override void Upgrade()
+        {
+            throw new NotImplementedException();
+        }
 
         public class Boat
         {
@@ -226,6 +255,7 @@ namespace Assets.Scripts
         public Construction() { tasks = new Queue<Task>(); progress = 0; }
         internal override void Tick()
         {
+            techProgress += 1 + People.PeopleAt(People.Community.construction);
             float totalWork = People.PeopleAt(People.Community.construction) * constructionSpeed;
             while (totalWork > 0 && tasks.Count != 0)
             {
@@ -254,6 +284,11 @@ namespace Assets.Scripts
 
         public void AddTask(string name, float work, Action onCompletion) { tasks.Enqueue(new Task(name, work, onCompletion)); }
 
+        internal override void Upgrade()
+        {
+            constructionSpeed *= 1.5f;
+        }
+
         public class Task
         {
             public string name;
@@ -272,9 +307,13 @@ namespace Assets.Scripts
         public float totalSuppression { get { return People.PeopleAt(People.Community.military) * suppressionEfficiancy * People.Productivity(People.Community.military); } }
         internal override void Tick()
         {
+            techProgress += 1 + People.PeopleAt(People.Community.military);
             // Do nthing, I guess
         }
 
-        
+        internal override void Upgrade()
+        {
+            suppressionEfficiancy *= 1.5f;
+        }
     }
 }
