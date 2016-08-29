@@ -56,9 +56,9 @@ namespace Assets.Scripts
             }
             totalPopulation += (int)statisticalGrowth + God.random.NextDouble() < statisticalGrowth - Math.Floor(statisticalGrowth) ? 1 : 0;
             // unrest
-            float suppression = God.TheOne.military.totalSuppression / totalPopulation;
-            float inequality = foodAllowance.Values.Max() - foodAllowance.Values.Min();
-            // due to pyramids
+            float suppression = God.TheOne.military.averageSupression;
+            float inequality = God.TheOne.military.inequality;
+            float pyramidUnrest = God.TheOne.military.pyramidUnrest;
             foreach (var com in communityList)
             {       // Has maximum of 0.5 at 0.5 food, foes to 0 for 1.0 food and reaches minimum of -0.5 at 2.0 food
                 float foodQuality;

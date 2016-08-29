@@ -120,6 +120,8 @@ namespace Assets.Scripts
             case People.Community.military:
                 Military m = God.TheOne.military;
                 panel.GetChild(1).Find("Supression").GetChild(1).GetComponent<Text>().text = m.averageSupression.ToString("#0%");
+                panel.GetChild(1).Find("Inequality").GetChild(1).GetComponent<Text>().text = m.inequality.ToString("#0%");
+                panel.GetChild(1).Find("Pyramids").GetChild(1).GetComponent<Text>().text = m.pyramidUnrest.ToString("#0%");
                 panel.GetChild(1).Find("TechProgress").GetChild(1).GetComponent<Text>().text = m.techProgress.ToString("# ##0");
                 panel.GetChild(2).GetComponent<Button>().interactable = m.techProgress >= 1000;
                 break;

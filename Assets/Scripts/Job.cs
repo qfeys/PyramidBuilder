@@ -243,9 +243,9 @@ namespace Assets.Scripts
             public int GetTimeRequired()
             {
                 int maxCrewDiff = maxCrew - minCrew;
-                int maxTimeDiff = minTravelTime - maxTravelTime;
-                int crewDiff = crew - minCrew;
-                if (crewDiff == 0) return maxTravelTime;
+                int maxTimeDiff = maxTravelTime - minTravelTime;
+                int crewDiff = maxCrew - crew;
+                if (crewDiff == 0) return minTravelTime;
                 return minTravelTime + (int)((float)maxTimeDiff / maxCrewDiff * crewDiff);
             }
 
@@ -337,6 +337,8 @@ namespace Assets.Scripts
         float suppressionEfficiancy = 1.0f;
         public float totalSuppression { get { return People.PeopleAt(People.Community.military) * suppressionEfficiancy * People.Productivity(People.Community.military); } }
         public float averageSupression { get { return totalSuppression / People.totalPopulation; } }
+        public float inequality { get { return People.foodAllowance.Values.Max() - People.foodAllowance.Values.Min(); } }
+        public float pyramidUnrest { get {return God.TheOne.pyramidTracker * 0.2f; } }
         internal override void Tick()
         {
             techProgress += 1 + People.PeopleAt(People.Community.military) / 100;
