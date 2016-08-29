@@ -18,6 +18,8 @@ namespace Assets.Scripts
                 Outliner.TheOne.TimeDown();
             if (Input.GetButtonDown("Overview"))
                 Outliner.TheOne.ToggleRealmOverview();
+            if (Input.GetButtonDown("Sound"))
+                God.TheOne.gameObject.GetComponent<AudioSource>().enabled = !God.TheOne.gameObject.GetComponent<AudioSource>().enabled;
         }
     }
 }

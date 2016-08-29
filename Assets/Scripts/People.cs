@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -51,10 +52,10 @@ namespace Assets.Scripts
                 else if (foodAllowance[com] > 1.0f) growth = 2 + (foodAllowance[com] - 1) * 2;
                 else if (foodAllowance[com] > 0.5f) growth = (foodAllowance[com] - 0.5f) * 4;
                 else growth = (foodAllowance[com] - 0.5f) * -100;
-
-                statisticalGrowth += Math.Pow(1 + growth / 100, 1 / 12f) * PeopleAt(com);
+                statisticalGrowth += Math.Pow(1 + growth / 100, 1 / 12f) * PeopleAt(com) - PeopleAt(com);
             }
-            totalPopulation += (int)statisticalGrowth + God.random.NextDouble() < statisticalGrowth - Math.Floor(statisticalGrowth) ? 1 : 0;
+            totalPopulation += (int)statisticalGrowth;
+            totalPopulation += God.random.NextDouble() < statisticalGrowth - Math.Floor(statisticalGrowth) ? 1 : 0;
             // unrest
             float suppression = God.TheOne.military.averageSupression;
             float inequality = God.TheOne.military.inequality;
@@ -67,6 +68,12 @@ namespace Assets.Scripts
                 else if (foodAllowance[com] < 2.0) foodQuality = (foodAllowance[com] - 1) / 2;
                 else foodQuality = 0.5f;
                 unrest[com] = foodQuality + inequality - suppression;
+            }
+            if (unrest.All(u => u.Value >= 1))
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("EndScreen");
+                GameObject.Find("FinalText").GetComponent<Text>().text = "You build " + God.TheOne.pyramidTracker + " pyramids before you got killed!";
+                GameObject.Find("FinalText").GetComponent<AudioSource>().Play();
             }
         }
 

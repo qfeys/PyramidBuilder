@@ -110,6 +110,7 @@ namespace Assets.Scripts
         {
             Instantiate(pyramidProfab).transform.position = new Vector3(pyramidPositions[pyramidTracker].position.x, -3, pyramidPositions[pyramidTracker].position.z);
             pyramidTracker++;
+            transform.Find("Applause").GetComponent<AudioSource>().Play();
         }
 
         public void Console(string s)
